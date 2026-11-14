@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f8f3">
+<meta name="description" content="Video explainer interaktif langkah demi langkah menggambar bayangan pada cermin cekung dengan dua sinar istimewa.">
+<title>Video Explainer Cermin Cekung • BengkelMaFiA</title>
+<style>
+
+:root {
+  color-scheme: light;
+  --bg:#f7f8f3;
+  --bg2:#f1f5ee;
+  --panel:#ffffff;
+  --panel2:#f8faf7;
+  --line:#dce5dd;
+  --fg:#273a36;
+  --muted:#64756e;
+  --aqua:#35796e;
+  --amber:#ad6f39;
+  --pink:#9873ad;
+  --blue:#4d77a2;
+  --green:#39836f;
+  --white:#ffffff;
+  --shadow:0 3px 12px rgba(35,65,52,.025),0 16px 44px rgba(35,65,52,.045);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--fg);
+  font-family:Inter,"Segoe UI",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  background:radial-gradient(ellipse 64% 36% at 97% 0%,rgba(190,216,194,.32),transparent 87%),
+    radial-gradient(ellipse 38% 32% at 4% 100%,rgba(230,219,196,.19),transparent 88%),var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,canvas:focus-visible{outline:3px solid #277b6e;outline-offset:4px}
+.shell{max-width:1400px;margin:auto;padding:25px clamp(17px,3.5vw,48px) 42px}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin-bottom:clamp(33px,4.5vw,58px);padding-bottom:22px;border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:11px;font-size:13px;letter-spacing:.065em;font-weight:780;text-transform:uppercase;color:#2d5148}
+.logo{
+  display:grid;place-items:center;height:38px;width:38px;border-radius:11px;
+  background:linear-gradient(140deg,#3d8276,#608e7b);color:#fff;
+  font-size:20px;font-weight:850;box-shadow:0 6px 16px rgba(48,106,85,.14);
+}
+.topic{
+  font-size:11px;color:#54766b;border:1px solid #d2e3d8;
+  padding:8px 14px;border-radius:999px;background:#ffffffba;font-weight:600;letter-spacing:.025em;
+}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:28px}
+.eyebrow{
+  color:var(--aqua);font-size:11px;letter-spacing:.17em;font-weight:780;
+  text-transform:uppercase;margin-bottom:12px;
+}
+h1{font-size:clamp(32px,3.9vw,54px);letter-spacing:-.048em;line-height:1.12;margin:0 0 14px;font-weight:750;text-wrap:balance}
+h1 span{color:var(--aqua)}
+.lead{font-size:clamp(13px,1.3vw,15px);max-width:740px;color:var(--muted);line-height:1.85;margin:0}
+.status{
+  display:flex;align-items:center;gap:10px;flex:none;padding:10px 14px;border-radius:11px;
+  border:1px solid #cee3d3;background:#edf7ef;color:#386d54;font-size:11px;font-weight:770;letter-spacing:.03em;
+}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#4b9971;box-shadow:0 0 0 4px #85c3a831}
+.workspace{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(290px,.8fr);gap:18px;align-items:stretch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.diagram-panel{overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:19px 20px 15px}
+.panel-title{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:740;letter-spacing:-.012em;color:#2c453e}
+.tiny-symbol{width:28px;height:28px;border-radius:9px;background:#edf4ee;color:#477e69;display:grid;place-items:center;font-size:14px}
+.small-actions{display:flex;gap:7px;flex-wrap:wrap}
+.ghost-btn{
+  display:inline-flex;align-items:center;gap:6px;min-height:37px;padding:9px 12px;
+  border-radius:10px;border:1px solid #dbe5de;background:#f9fbf9;color:#45615a;
+  font-size:12px;font-weight:710;transition:background .2s,border-color .2s,transform .2s;
+}
+.ghost-btn:hover{border-color:#9abdae;background:#eff6f0;transform:translateY(-1px)}
+.ghost-btn[aria-pressed="true"]{background:#e1efe6;color:#236c59;border-color:#9fc4ae}
+.canvas-wrap{
+  margin:0 14px 4px;border:1px solid #dce6de;border-radius:14px;
+  overflow:hidden;position:relative;background:radial-gradient(ellipse 76% 62% at 46% 34%,#fff 0%,#fafcf8 94%);
+}
+canvas{width:100%;height:auto;aspect-ratio:1.76;min-height:310px;display:block;touch-action:pan-y;cursor:default}
+.canvas-tag{
+  pointer-events:none;position:absolute;top:13px;left:15px;background:#fffffff0;
+  border:1px solid #e1e9e0;border-radius:8px;color:#6a7f73;
+  padding:7px 10px;font-size:10px;font-weight:730;letter-spacing:.045em;box-shadow:0 3px 10px #1c3a2710;
+}
+.canvas-hint{
+  pointer-events:none;position:absolute;bottom:13px;left:15px;background:#fffffff0;
+  color:#5d7469;border:1px solid #e0e8df;border-radius:8px;font-size:11px;padding:7px 10px;
+}
+.legend{display:flex;gap:12px 21px;flex-wrap:wrap;padding:14px 20px 12px;font-size:11px;color:#526960}
+.legend i{display:inline-block;width:20px;height:3px;vertical-align:middle;margin-right:7px;border-radius:4px}
+.legend .dashed{border-top:2px dashed #947aab;height:0}
+.caption{padding:0 20px 18px;color:#708078;font-size:11px;line-height:1.8}
+.control-panel{padding:20px 20px 22px;display:flex;flex-direction:column;gap:17px}
+.control-intro{font-size:12px;color:var(--muted);line-height:1.65;margin:6px 0 0}
+.field{display:block;min-width:0}
+.field-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;gap:10px}
+.field-name{font-size:13px;font-weight:700;color:#334c43}
+.field-name small{display:block;font-size:11px;font-weight:430;color:#77877e;margin-top:3px}
+.value{color:#256c60;font-size:14px;font-weight:780;font-variant-numeric:tabular-nums;white-space:nowrap}
+.track{width:100%;accent-color:#3d8174;cursor:pointer;height:7px}
+.track::-webkit-slider-runnable-track{border-radius:100px}
+.track::-webkit-slider-thumb{cursor:grab}
+.track:active::-webkit-slider-thumb{cursor:grabbing}
+.range-end{display:flex;justify-content:space-between;color:#7b8d82;font-size:10px;margin-top:7px}
+.divider{border:0;border-top:1px solid #e4ebe5;margin:0}
+.switch-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.switch-title{font-size:12px;font-weight:720;color:#38544b}
+.switch-sub{font-size:11px;color:#7a8b81;margin-top:3px;line-height:1.5}
+.switch{position:relative;width:40px;height:23px;flex:none}
+.switch input{position:absolute;opacity:0}
+.switch span{display:block;background:#b8c8bd;width:40px;height:23px;border-radius:99px;transition:.2s}
+.switch span:after{content:"";position:absolute;top:3px;left:3px;background:white;width:17px;height:17px;border-radius:50%;transition:.2s;box-shadow:0 1px 3px #1b3d2920}
+.switch input:checked+span{background:#498877}
+.switch input:checked+span:after{transform:translateX(17px)}
+.switch input:focus-visible+span{outline:3px solid #348478;outline-offset:4px}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap}
+.pill{
+  flex:1;min-width:72px;font-size:11px;font-weight:750;color:#45685c;
+  background:#f6faf6;border:1px solid #d9e7dc;padding:10px 11px;border-radius:10px;
+  transition:background .2s,border-color .2s;
+}
+.pill:hover{border-color:#8ebba5;background:#edf6ee}
+.pill.active{color:#216b57;border-color:#8fbba4;background:#e0f0e5}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-top:17px}
+.stat{
+  padding:17px 19px 18px;border:1px solid #dfe7df;border-radius:15px;
+  background:#fff;min-width:0;box-shadow:0 4px 15px #39574409;
+}
+.stat-label{font-size:11px;color:#677e71;margin-bottom:8px}
+.stat-value{font-size:clamp(19px,2.05vw,27px);font-weight:760;letter-spacing:-.035em;font-variant-numeric:tabular-nums;white-space:nowrap;color:#30443c}
+.stat-value small{font-size:12px;font-weight:600;color:#7b9386}
+.stat-foot{font-size:11px;color:#718679;margin-top:8px;line-height:1.55}
+.stat.image .stat-value{color:#277767}
+.stat.magnification .stat-value{color:#a46c3e}
+.lower{display:grid;grid-template-columns:1.05fr .95fr;gap:17px;margin-top:17px}
+.info-box{padding:23px 25px}
+.h2{margin:0 0 14px;font-size:16px;font-weight:760;color:#304b41;letter-spacing:-.02em}
+.properties{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+.chip{color:#36745f;border:1px solid #d4e7d8;border-radius:999px;background:#eef7ee;padding:7px 12px;font-size:11px;font-weight:750}
+.body-copy{font-size:12px;color:#61736a;line-height:1.9;margin:0}
+.math{
+  font-family:Cambria,"Times New Roman",serif;font-size:21px;color:#30483e;
+  letter-spacing:.01em;padding:13px 16px;background:#f5f8f3;
+  border:1px solid #e1e9de;border-radius:11px;margin:10px 0;
+}
+.math-note{color:#687c6e;font-size:11px;line-height:1.85}
+.insight{
+  display:flex;gap:11px;align-items:flex-start;padding:14px 15px;
+  border:1px solid #d8e7dc;background:#f0f7f1;border-radius:11px;margin-top:15px;
+  font-size:12px;line-height:1.75;color:#426555;
+}
+.sparkle{color:#b88756;font-size:18px;flex:none}
+.footer{
+  margin-top:31px;border-top:1px solid var(--line);padding-top:19px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  color:#84958b;font-size:11px;line-height:1.6;
+}
+@media(max-width:900px){
+  .workspace{grid-template-columns:1fr}
+  .control-panel{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .control-panel>.full{grid-column:1/-1}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lower{grid-template-columns:1fr 1fr}
+}
+@media(max-width:570px){
+  .shell{padding:17px 12px 31px}
+  .topbar{margin-bottom:28px;gap:10px;flex-wrap:wrap;padding-bottom:18px}
+  .brand{font-size:12px}
+  .topic{font-size:10px}
+  .status{display:none}
+  header{margin-bottom:22px}
+  h1{letter-spacing:-.045em}
+  .lead{font-size:13px}
+  .panel{border-radius:15px}
+  .panel-head{padding:14px 12px 12px;align-items:flex-start;flex-wrap:wrap}
+  .small-actions{justify-content:flex-start;width:100%}
+  .ghost-btn{font-size:11px;padding:8px 10px;min-height:34px}
+  .canvas-wrap{margin:0 8px}
+  canvas{aspect-ratio:1.23;min-height:310px}
+  .canvas-tag{font-size:9px;max-width:calc(100% - 25px);padding:6px 7px}
+  .canvas-hint{font-size:10px;bottom:9px;left:9px;padding:6px 8px}
+  .control-panel{grid-template-columns:1fr;gap:19px;padding:17px}
+  .control-panel>.full{grid-column:auto}
+  .stats{gap:9px}
+  .stat{padding:13px}
+  .stat-value{font-size:20px}
+  .lower{grid-template-columns:1fr}
+  .legend{gap:10px 14px;padding:13px 12px}
+  .caption{padding:0 12px 15px}
+  .info-box{padding:20px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+.preset-row .pill{min-width:105px}
+.stat-value{overflow-wrap:anywhere}
+@media(max-width:570px){.stat{overflow:hidden}.stat-value{font-variant-numeric:tabular-nums}.preset-row .pill{min-width:calc(50% - 8px)}}
+  /* Typography pass — readable without altering simulation behavior. */
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.brand{font-size:15px;letter-spacing:.025em}
+.topic{font-size:13px}
+.eyebrow{font-size:13px;letter-spacing:.13em}
+.lead{font-size:clamp(15px,1.5vw,17px);line-height:1.8}
+.status{font-size:13px}
+.panel-title{font-size:16px;line-height:1.5}
+.ghost-btn{font-size:14px;min-height:43px;padding:10px 13px}
+.canvas-tag{font-size:12px;line-height:1.45;letter-spacing:.012em}
+.canvas-hint{font-size:13px;line-height:1.45}
+.legend{font-size:14px;line-height:1.6;gap:12px 23px}
+.legend i{width:23px}
+.caption{font-size:14px;line-height:1.8}
+.control-panel{gap:21px}
+.control-intro{font-size:14px;line-height:1.75}
+.field-row{margin-bottom:13px}
+.field-name{font-size:15px;line-height:1.5}
+.field-name small{font-size:13px;line-height:1.5;margin-top:4px}
+.value{font-size:16px;line-height:1.4}
+.track{height:14px}
+.range-end{font-size:12px;line-height:1.5}
+.switch-title{font-size:14px;line-height:1.5}
+.switch-sub{font-size:13px;line-height:1.6}
+.switch{width:43px;height:25px}
+.switch span{width:43px;height:25px}
+.switch span:after{width:19px;height:19px}
+.switch input:checked+span:after{transform:translateX(18px)}
+.pill{font-size:14px;min-height:43px;line-height:1.45;padding:10px 12px}
+.stat-label{font-size:13px;line-height:1.5}
+.stat-value{font-size:clamp(22px,2.25vw,30px)}
+.stat-value small{font-size:14px}
+.stat-foot{font-size:13px;line-height:1.55}
+.stat:last-child .stat-value{font-size:clamp(19px,1.8vw,23px)!important;white-space:normal}
+.h2{font-size:19px;line-height:1.45}
+.chip{font-size:13px;line-height:1.5;padding:7px 13px}
+.body-copy{font-size:15px;line-height:1.85}
+.math{font-size:24px;line-height:1.55}
+.math-note{font-size:14px;line-height:1.8}
+.insight{font-size:14px;line-height:1.8}
+.footer{font-size:13px;line-height:1.7}
+@media(max-width:900px){
+  .workspace{align-items:start}
+  .control-panel{gap:22px}
+}
+@media(max-width:570px){
+  .brand{font-size:14px}
+  .topic{font-size:12px}
+  .eyebrow{font-size:12px}
+  .lead{font-size:15px}
+  .panel-head{gap:12px}
+  .panel-title{font-size:15px}
+  .ghost-btn{font-size:13px;min-height:42px;padding:9px 11px}
+  .canvas-tag{font-size:11px;line-height:1.4}
+  .canvas-hint{font-size:12px;line-height:1.5}
+  canvas{min-height:335px}
+  .legend{font-size:13px;gap:10px 14px}
+  .caption{font-size:13.5px}
+  .control-panel{gap:21px}
+  .field-row{flex-wrap:wrap}
+  .stat-label{font-size:12.5px}
+  .stat-value{font-size:22px}
+  .stat-foot{font-size:12px}
+  .stat:last-child .stat-value{font-size:18px!important}
+  .info-box{padding:21px}
+  .body-copy{font-size:15px}
+  .math{font-size:22px}
+  .footer{font-size:12.5px}
+}
+  
+/* Navigation and social-link styling shared across the mirror laboratories */
+.back-link{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:#397465;background:#eff6ef;border:1px solid #d7e7d8;padding:9px 13px;border-radius:11px;font-size:13px;font-weight:720;min-height:42px;transition:background .2s}
+.back-link:hover{background:#e1f0e4}
+.nav-links{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.footer a{color:#326f61;text-underline-offset:3px;font-weight:700}
+.footer a:hover{color:#205344}
+@media(max-width:570px){.topbar{gap:12px}.nav-links{width:100%;justify-content:space-between}.back-link{font-size:13px}}
+
+/* The same dedicated measurement space is used by all three optics diagrams. */
+.canvas-wrap canvas{min-height:360px}
+.dimension-note{margin:0 20px 16px;font-size:13px;line-height:1.65;color:#5b7365}
+@media(max-width:570px){
+  .canvas-wrap canvas{min-height:390px}
+  .dimension-note{margin:0 12px 15px;font-size:12.5px}
+}
+
+
+/* Interaction help sits outside the canvas, never over rays or measurements. */
+.diagram-help{
+  display:flex;align-items:center;min-height:38px;
+  margin:11px 18px 0;padding:8px 12px;
+  border:1px solid #e1e9e2;border-radius:10px;
+  background:#f8faf7;color:#4f7165;
+  font:600 13px/1.55 "Segoe UI",system-ui,sans-serif;
+  position:static;pointer-events:auto;
+}
+@media(max-width:570px){
+  .diagram-help{margin:10px 10px 0;padding:9px 11px;font-size:12.5px}
+}
+
+
+.explainer-shell{max-width:1250px;margin:0 auto}
+.hero{margin:0 0 25px}
+.hero .lead{max-width:850px}
+.kicker{font-size:12px;font-weight:800;letter-spacing:.13em;color:var(--aqua);text-transform:uppercase;margin-bottom:9px}
+.player-layout{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(270px,.85fr);gap:18px;align-items:stretch}
+.video-card,.narration-card,.concept-card{background:var(--panel);border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow)}
+.video-card{overflow:hidden;min-width:0}
+.video-top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:18px 20px 14px}
+.video-title{font-size:16px;font-weight:760;color:var(--fg);letter-spacing:-.02em}
+.video-meta{display:inline-flex;align-items:center;gap:8px;color:#587668;font-size:12px}
+.video-meta::before{content:"";width:8px;height:8px;border-radius:50%;background:#73a68e}
+.stage{position:relative;margin:0 14px;background:#fbfcf9;border:1px solid #e1e9e0;border-radius:14px;overflow:hidden}
+.stage svg{display:block;width:100%;height:auto;aspect-ratio:16/9}
+.stage svg text{font-family:"Segoe UI",Arial,sans-serif}
+.stage .gridline{stroke:#dfe9e1;stroke-width:1}
+.stage .axis{stroke:#94a79c;stroke-width:2;stroke-dasharray:8 7}
+.stage .optic-label{font-size:19px;font-weight:750;fill:#526c60}
+.stage .optic-note{font-size:14px;font-weight:650;fill:#698073}
+.stage .ray1{stroke:#b77c3f;stroke-width:4.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.stage .ray2{stroke:#2a8679;stroke-width:4.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.stage .object{stroke:#b9654b;stroke-width:7;stroke-linecap:round}
+.stage .image-arrow{stroke:#358368;stroke-width:6;stroke-linecap:round}
+.video-legend{display:flex;flex-wrap:wrap;gap:11px 23px;padding:14px 20px 12px;color:#566d61;font-size:13px}
+.video-legend .line{display:inline-block;width:23px;height:4px;border-radius:5px;vertical-align:middle;margin-right:7px}
+.scrubber-wrap{padding:5px 20px 19px}
+.progress-row{display:flex;align-items:center;gap:12px}
+.scrubber{width:100%;accent-color:#397c6b;cursor:pointer;height:14px}
+.time-display{min-width:76px;text-align:right;color:#66796d;font:700 12px "Segoe UI",system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:12px}
+.control-btn{min-height:44px;border:1px solid #d5e5d9;border-radius:11px;background:#fff;color:#385b4b;font:700 13px "Segoe UI",system-ui,sans-serif;padding:9px 15px;transition:background .2s,border-color .2s}
+.control-btn:hover{background:#ecf4ed;border-color:#a8c9b3}
+.control-btn.primary{background:#377a69;border-color:#377a69;color:#fff;padding:10px 22px}
+.control-btn.primary:hover{background:#2e6859}
+.speed-wrap{display:flex;align-items:center;gap:7px;margin-left:auto;color:#657e70;font-size:12px;font-weight:700}
+.speed-wrap select{min-height:42px;border:1px solid #d4e4d8;background:#fff;color:#2d594b;border-radius:10px;padding:8px 10px;font:inherit}
+.narration-card{padding:19px 18px;display:flex;flex-direction:column}
+.narration-kicker{font-weight:800;font-size:11px;color:#438271;letter-spacing:.14em;text-transform:uppercase}
+.narration-heading{font-size:clamp(20px,2.15vw,25px);line-height:1.3;margin:10px 0 10px;color:#293e36;letter-spacing:-.035em}
+.narration-copy{min-height:97px;font-size:15px;color:#587063;line-height:1.85;margin:0 0 16px}
+.chapter-heading{font-size:12px;letter-spacing:.08em;font-weight:800;color:#6b8474;text-transform:uppercase;margin:4px 0 11px}
+.chapter-list{display:grid;gap:6px}
+.chapter{width:100%;display:flex;gap:11px;align-items:center;text-align:left;background:transparent;border:1px solid transparent;border-radius:10px;padding:9px 10px;color:#52695d;min-height:43px;cursor:pointer;font:600 13px/1.45 "Segoe UI",system-ui,sans-serif}
+.chapter:hover{background:#f1f7f2}
+.chapter.active{background:#eaf4ec;border-color:#d0e4d6;color:#236753;font-weight:760}
+.chapter-index{flex:none;display:grid;place-items:center;border-radius:8px;background:#f1f4f0;border:1px solid #e1eae1;color:#698275;width:29px;height:28px;font-size:12px}
+.chapter.active .chapter-index{background:#357b69;border-color:#357b69;color:white}
+.narration-tip{font-size:12px;line-height:1.6;color:#7a8d81;border-top:1px solid #e5eee6;padding-top:13px;margin-top:auto}
+.concept-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:18px}
+.concept-card{padding:19px 21px}
+.concept-label{font-size:12px;font-weight:720;color:#74877b;margin-bottom:5px}
+.concept-value{font-size:clamp(20px,2vw,25px);font-weight:760;color:#2f6354;font-variant-numeric:tabular-nums}
+.concept-card small{display:block;font-size:12px;color:#748679;line-height:1.6;margin-top:7px}
+.lesson-box{background:#fff;border:1px solid #e0e9df;border-radius:18px;margin-top:17px;padding:23px 26px}
+.lesson-box h2{margin:0 0 10px;font-size:20px;color:#30473d}
+.lesson-box p{max-width:100%;margin:0;font-size:15px;line-height:1.85;color:#65796b}
+.lesson-box .equations{font-size:20px;color:#305b4c;font-family:Cambria,"Times New Roman",serif;padding:15px 18px;background:#f3f8f3;border:1px solid #e1eae0;border-radius:12px;margin-top:15px}
+.footer a{color:#326f61;text-underline-offset:3px;font-weight:700}
+.back-link{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:#397465;background:#eff6ef;border:1px solid #d7e7d8;padding:9px 13px;border-radius:11px;font-size:13px;font-weight:720;min-height:42px}
+.back-link:hover{background:#e1f0e4}
+.nav-links{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+@media(max-width:1000px){.player-layout{grid-template-columns:1fr}.narration-card{display:block}.chapter-list{grid-template-columns:repeat(2,minmax(0,1fr))}.narration-copy{min-height:0}}
+@media(max-width:570px){
+ .shell{padding:16px 12px 32px}
+ .topbar{flex-wrap:wrap}
+ .nav-links{width:100%;justify-content:space-between}
+ .hero{margin-top:18px}
+ .stage{margin:0 8px}
+ .video-top{padding:14px 12px 11px}
+ .video-legend{padding:12px;gap:9px 14px;font-size:12px}
+ .scrubber-wrap{padding:4px 12px 16px}
+ .control-btn{min-height:42px;padding:8px 11px}
+ .control-btn.primary{padding:8px 17px}
+ .speed-wrap{margin-left:0}
+ .narration-card{padding:18px 14px}
+ .chapter-list{grid-template-columns:1fr}
+ .concept-strip{grid-template-columns:1fr;gap:9px}
+ .concept-card{padding:14px 17px}
+ .lesson-box{padding:20px 17px}
+ .lesson-box .equations{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+</style>
+</head>
+<body>
+<div class="shell explainer-shell">
+<nav class="topbar" aria-label="Navigasi utama">
+ <div class="brand"><span class="logo" aria-hidden="true">B</span> BengkelMaFiA <span style="color:#7d9487;font-weight:400">/ LAB</span></div>
+ <div class="nav-links"><a class="back-link" href="../">← Halaman utama</a><div class="topic">FISIKA SMA · VIDEO EXPLAINER</div></div>
+</nav>
+<header class="hero">
+ <div><div class="eyebrow">Laboratorium Virtual 04 · Video Explainer</div>
+ <h1>Bagaimana menggambar <span>bayangan cermin cekung?</span></h1>
+ <p class="lead">Ikuti animasi dua sinar istimewa, satu demi satu, sampai keduanya berpotongan dan menentukan posisi bayangan. Putar, jeda, ulangi, atau pilih langkah tertentu untuk mempelajarinya.</p></div>
+</header>
+<main>
+<section class="player-layout" aria-label="Video pembelajaran interaktif">
+ <div class="video-card">
+  <div class="video-top"><div class="video-title">Konstruksi sinar · Cermin cekung</div><div class="video-meta">Animasi pembelajaran tanpa audio</div></div>
+  <div class="stage">
+   <svg id="diagram" viewBox="0 0 960 540" role="img" aria-label="Diagram cermin cekung: sinar pertama sejajar sumbu dipantulkan melalui fokus; sinar kedua melalui fokus dipantulkan sejajar; kedua sinar pantul berpotongan menghasilkan bayangan nyata, terbalik, dan diperkecil.">
+   <defs>
+    <marker id="rayAHead" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,3.5 L0,7 Z" fill="#b77c3f"/></marker>
+    <marker id="rayBHead" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,3.5 L0,7 Z" fill="#2a8679"/></marker>
+    <marker id="objectHead" markerWidth="13" markerHeight="13" refX="6" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,6 L6,0 L12,6 Z" fill="#b9654b"/></marker>
+    <marker id="imageHead" markerWidth="13" markerHeight="13" refX="6" refY="9" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,0 L6,7 Z" fill="#358368"/></marker>
+   </defs>
+   <rect x="0" y="0" width="960" height="540" fill="#fbfcf9"/>
+   <g opacity=".7">
+    <path d="M50 115 H900 M50 195 H900 M50 355 H900 M50 435 H900" class="gridline"/>
+    <path d="M140 70 V475 M260 70 V475 M380 70 V475 M500 70 V475 M620 70 V475 M740 70 V475 M860 70 V475" class="gridline"/>
+   </g>
+   <rect x="740" y="69" width="220" height="404" fill="#e7f2e9" opacity=".35"/>
+   <line x1="55" y1="275" x2="915" y2="275" class="axis"/>
+   <text x="920" y="255" text-anchor="end" class="optic-note">SUMBU UTAMA</text>
+   <path d="M722 100 Q758 275 722 450" stroke="#bfd6c4" stroke-width="14" opacity=".4" fill="none" stroke-linecap="round"/>
+   <path d="M722 100 Q758 275 722 450" stroke="#608d80" stroke-width="5" fill="none" stroke-linecap="round"/>
+   <path d="M722 100 Q758 275 722 450" stroke="#eff7f0" stroke-width="1.4" fill="none"/>
+   <g stroke="#a7bdad" stroke-width="2" opacity=".8">
+    <path d="M731 115 l12 -11 M735 140 l12 -11 M739 165 l12 -11 M741 190 l12 -11 M741 215 l12 -11 M741 240 l12 -11 M741 285 l12 -11 M741 310 l12 -11 M741 335 l12 -11 M739 360 l12 -11 M735 385 l12 -11 M731 410 l12 -11"/>
+   </g>
+   <g>
+    <circle cx="740" cy="275" r="4.5" fill="#477e6e"/><text x="745" y="304" class="optic-label">P</text>
+    <circle cx="620" cy="275" r="5" fill="#b77c3f"/><text x="620" y="304" text-anchor="middle" class="optic-label" fill="#b77c3f">F</text>
+    <circle cx="500" cy="275" r="4.6" fill="#6d9384"/><text x="500" y="304" text-anchor="middle" class="optic-label">C</text>
+   </g>
+   <g>
+    <line x1="380" y1="275" x2="380" y2="155" class="object"/>
+    <path d="M367 169 L380 146 L393 169" stroke="#b9654b" stroke-width="5" stroke-linejoin="round" fill="none"/>
+    <circle cx="380" cy="155" r="6" fill="#b9654b"/>
+    <text x="381" y="133" text-anchor="middle" font-size="19" fill="#a8543e" font-weight="780">BENDA</text>
+   </g>
+   <g id="rayAGroup">
+    <line id="rayA1" class="ray1" x1="380" y1="155" x2="380" y2="155" marker-end="url(#rayAHead)" visibility="hidden"/>
+    <line id="rayA2" class="ray1" x1="740" y1="155" x2="740" y2="155" marker-end="url(#rayAHead)" visibility="hidden"/>
+   </g>
+   <g id="rayBGroup">
+    <line id="rayB1" class="ray2" x1="380" y1="155" x2="380" y2="155" marker-end="url(#rayBHead)" visibility="hidden"/>
+    <line id="rayB2" class="ray2" x1="740" y1="335" x2="740" y2="335" marker-end="url(#rayBHead)" visibility="hidden"/>
+   </g>
+   <g id="imageGroup" opacity="0">
+    <line id="imageLine" x1="560" y1="275" x2="560" y2="275" class="image-arrow"/>
+    <path id="imageTip" d="M548 325 L560 342 L572 325" fill="none" stroke="#358368" stroke-width="4" stroke-linejoin="round" opacity="0"/>
+    <circle id="intersectionDot" cx="560" cy="335" r="7" fill="#358368" stroke="#ffffff" stroke-width="2" opacity="0"/>
+    <text id="imageCaption" x="555" y="372" text-anchor="middle" font-size="19" font-weight="760" fill="#286b55" opacity="0">BAYANGAN</text>
+    <text id="imageNature" x="555" y="395" text-anchor="middle" font-size="15" font-weight="650" fill="#527a63" opacity="0">nyata · terbalik</text>
+   </g>
+   <g id="summaryGroup" opacity="0">
+    <rect x="58" y="452" width="384" height="61" rx="13" fill="#ffffff" stroke="#d7e8dc"/>
+    <text x="79" y="479" font-size="18" fill="#2f6956" font-weight="760">Nyata · terbalik · diperkecil</text>
+    <text x="79" y="500" font-size="14" fill="#677c6b">Bayangan berada di antara F dan C</text>
+   </g>
+   </svg>
+  </div>
+  <div class="video-legend" aria-label="Legenda">
+   <span><i class="line" style="background:#b77c3f"></i>Sinar pertama</span>
+   <span><i class="line" style="background:#2a8679"></i>Sinar kedua</span>
+   <span><i class="line" style="background:#b9654b"></i>Benda</span>
+   <span><i class="line" style="background:#358368"></i>Bayangan</span>
+  </div>
+  <div class="scrubber-wrap">
+   <div class="progress-row">
+    <input id="seek" class="scrubber" type="range" min="0" max="28" step="0.01" value="0" aria-label="Posisi waktu animasi dalam detik"/>
+    <output id="time" class="time-display" for="seek">0:00 / 0:28</output>
+   </div>
+   <div class="controls">
+    <button id="play" class="control-btn primary" type="button" aria-pressed="false">▶ Putar</button>
+    <button id="previous" class="control-btn" type="button" title="Langkah sebelumnya">← Sebelumnya</button>
+    <button id="next" class="control-btn" type="button" title="Langkah berikutnya">Berikutnya →</button>
+    <button id="restart" class="control-btn" type="button">↺ Ulangi</button>
+    <label class="speed-wrap">Kecepatan
+     <select id="speed" aria-label="Kecepatan animasi"><option value="0.75">0,75×</option><option value="1" selected>1×</option><option value="1.5">1,5×</option><option value="2">2×</option></select>
+    </label>
+   </div>
+  </div>
+ </div>
+ <aside class="narration-card" aria-live="off">
+  <div class="narration-kicker" id="stepCounter">LANGKAH 1 DARI 7</div>
+  <h2 class="narration-heading" id="stepTitle">Kenali benda dan cermin</h2>
+  <p id="stepDescription" class="narration-copy" aria-live="polite">Mula-mula, letakkan benda di depan cermin cekung. Tandai titik kutub P, fokus F, dan pusat kelengkungan C.</p>
+  <div class="chapter-heading">Urutan penjelasan</div>
+  <div id="chapters" class="chapter-list" aria-label="Pilih langkah animasi"></div>
+  <p class="narration-tip">Animasi ini menggunakan konstruksi sinar paraksial. Dua sinar istimewa sudah cukup untuk menentukan bayangan pada contoh ini.</p>
+ </aside>
+</section>
+<section class="concept-strip" aria-label="Data contoh">
+ <div class="concept-card"><div class="concept-label">Jarak benda · s</div><div class="concept-value">90 cm</div><small>Di luar pusat kelengkungan C (60 cm)</small></div>
+ <div class="concept-card"><div class="concept-label">Panjang fokus · f</div><div class="concept-value">30 cm</div><small>Cermin cekung, fokus bertanda positif</small></div>
+ <div class="concept-card"><div class="concept-label">Jarak bayangan · s′</div><div class="concept-value">45 cm</div><small>Di antara F dan C, bayangan nyata</small></div>
+</section>
+<article class="lesson-box">
+ <h2>Mengapa dua sinar cukup?</h2>
+ <p>Puncak bayangan terletak di perpotongan dua sinar pantul. Sinar pertama datang sejajar sumbu utama lalu dipantulkan melalui F. Sinar kedua datang melalui F lalu dipantulkan sejajar sumbu utama. Untuk benda di luar C, keduanya berpotongan di depan cermin, di bawah sumbu utama, sehingga bayangannya nyata, terbalik, dan diperkecil. Garis sinar digambar mengikuti pendekatan paraksial.</p>
+ <div class="equations">1/f = 1/s + 1/s′ &nbsp; &nbsp; → &nbsp; &nbsp; 1/30 = 1/90 + 1/45<br/>M = −s′/s = −45/90 = −0,5 &nbsp; &nbsp; → &nbsp; &nbsp; h′ = −15 cm</div>
+</article>
+</main>
+<footer class="footer"><span>© BengkelMaFiA · Video Explainer Optika SMA</span><span>Berbasis HTML, SVG, dan JavaScript · tanpa MP4</span><span>YouTube: <a href="https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA" target="_blank" rel="noopener noreferrer">Channel BengkelMaFiA ↗</a></span></footer>
+</div>
+<script>
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const total=28;
+  const chapters=[
+    {at:0,title:'Kenali benda dan cermin',description:'Benda berada 90 cm di depan cermin cekung. Fokus F berjarak 30 cm dan pusat kelengkungan C berjarak 60 cm dari titik kutub P.'},
+    {at:3,title:'Tarik sinar pertama sejajar sumbu',description:'Mulai dari puncak benda, tarik sinar pertama sejajar sumbu utama hingga mengenai cermin cekung.'},
+    {at:7,title:'Pantulkan sinar pertama melalui F',description:'Setelah mengenai cermin, sinar pertama dipantulkan melalui titik fokus F. Perhatikan arah pantul menuju kiri-bawah.'},
+    {at:11,title:'Tarik sinar kedua melalui F',description:'Dari puncak benda, tarik sinar kedua melalui fokus F menuju permukaan cermin. Sinar ini mengenai bagian bawah cermin.'},
+    {at:15,title:'Pantulkan sinar kedua sejajar sumbu',description:'Sinar kedua yang datang melalui F dipantulkan sejajar sumbu utama. Sekarang kedua sinar pantul akan saling berpotongan.'},
+    {at:19,title:'Tentukan titik perpotongan',description:'Titik pertemuan kedua sinar pantul adalah puncak bayangan. Tarik panah dari sumbu utama ke titik itu: bayangannya nyata dan terbalik.'},
+    {at:23,title:'Simpulkan sifat bayangan',description:'Benda di luar C menghasilkan bayangan di antara F dan C. Dengan f = 30 cm dan s = 90 cm, diperoleh s′ = 45 cm dan perbesaran M = −0,5. Jika h = 30 cm, maka h′ = −15 cm.'}
+  ];
+  // Fixed example, obeys: s=90, f=30, s'=45, h=30, h'=-15.
+  // SVG scale is uniformly 4 pixels per centimeter in both axes.
+  const segments=[
+    {id:'rayA1',a:[380,155],b:[740,155],from:3,to:7},
+    {id:'rayA2',a:[740,155],b:[460,435],from:7,to:11},
+    {id:'rayB1',a:[380,155],b:[740,335],from:11,to:15},
+    {id:'rayB2',a:[740,335],b:[320,335],from:15,to:19}
+  ];
+  let t=0,playing=false,lastFrame=null,speed=1,active=-1,frameRequest=0;
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const progress=(x,a,b)=>clamp((x-a)/(b-a),0,1);
+  const ease=x=>x*x*(3-2*x);
+  const chapterAt=x=>{for(let i=chapters.length-1;i>=0;i--)if(x>=chapters[i].at)return i;return 0;};
+  const chapterUI=$('chapters');
+  chapters.forEach((chapter,index)=>{
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='chapter';btn.setAttribute('aria-label','Lompat ke langkah '+(index+1)+': '+chapter.title);
+    btn.innerHTML='<span class="chapter-index">'+String(index+1).padStart(2,'0')+'</span><span>'+chapter.title+'</span>';
+    btn.addEventListener('click',()=>goToStep(index));
+    chapterUI.appendChild(btn);
+  });
+  function setLine(id,ax,ay,bx,by,p){
+    const el=$(id),visible=p>.0001;
+    el.setAttribute('visibility',visible?'visible':'hidden');
+    el.setAttribute('x1',ax);el.setAttribute('y1',ay);
+    el.setAttribute('x2',ax+(bx-ax)*p);el.setAttribute('y2',ay+(by-ay)*p);
+  }
+  function draw(){
+    segments.forEach(({id,a,b,from,to})=>setLine(id,a[0],a[1],b[0],b[1],progress(t,from,to)));
+    const grow=ease(progress(t,19,21));
+    const reveal=progress(t,21,23);
+    $('imageGroup').setAttribute('opacity',t>=19?'1':'0');
+    $('imageLine').setAttribute('y2',275+60*grow);
+    $('imageTip').setAttribute('opacity',grow>.98?'1':'0');
+    $('intersectionDot').setAttribute('opacity',t>=19?'1':'0');
+    $('imageCaption').setAttribute('opacity',reveal);
+    $('imageNature').setAttribute('opacity',reveal);
+    $('summaryGroup').setAttribute('opacity',progress(t,23,25));
+    const chapterIndex=chapterAt(t);
+    if(chapterIndex!==active){
+      active=chapterIndex;
+      $('stepCounter').textContent='LANGKAH '+(active+1)+' DARI '+chapters.length;
+      $('stepTitle').textContent=chapters[active].title;
+      $('stepDescription').textContent=chapters[active].description;
+      Array.from(chapterUI.children).forEach((el,i)=>{
+        el.classList.toggle('active',i===active);
+        if(i===active)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');
+      });
+    }
+    $('seek').value=t.toFixed(2);
+    const fmt=v=>'0:'+String(Math.floor(v)).padStart(2,'0');
+    $('time').textContent=fmt(t)+' / '+fmt(total);
+  }
+  function pause(){
+    playing=false;lastFrame=null;
+    $('play').textContent='▶ Putar';$('play').setAttribute('aria-pressed','false');
+    if(frameRequest&&typeof cancelAnimationFrame==='function')cancelAnimationFrame(frameRequest);
+    frameRequest=0;
+  }
+  function tick(stamp){
+    if(!playing)return;
+    if(lastFrame===null)lastFrame=stamp;
+    const delta=Math.min(.08,Math.max(0,(stamp-lastFrame)/1000));lastFrame=stamp;
+    t=Math.min(total,t+delta*speed);
+    draw();
+    if(t>=total){pause();$('play').textContent='↻ Putar lagi';return;}
+    frameRequest=requestAnimationFrame(tick);
+  }
+  function play(){
+    if(t>=total)t=0;
+    playing=true;lastFrame=null;
+    $('play').textContent='Ⅱ Jeda';$('play').setAttribute('aria-pressed','true');
+    draw();frameRequest=requestAnimationFrame(tick);
+  }
+  function seek(x){t=clamp(Number(x),0,total);active=-1;draw();}
+  function goToStep(i){
+    pause();
+    const nextAt=chapters[i+1]?.at??total;
+    seek(Math.min(total, nextAt-.1)); // selected step appears in its completed state
+  }
+  $('play').addEventListener('click',()=>playing?pause():play());
+  $('restart').addEventListener('click',()=>{pause();seek(0)});
+  $('next').addEventListener('click',()=>goToStep(Math.min(chapters.length-1,chapterAt(t)+1)));
+  $('previous').addEventListener('click',()=>goToStep(Math.max(0,chapterAt(t)-1)));
+  $('seek').addEventListener('input',e=>{pause();seek(e.target.value)});
+  $('speed').addEventListener('change',e=>{speed=Number(e.target.value)||1});
+  document.addEventListener('keydown',e=>{
+    if(e.target.matches('input,button,select,textarea')||e.altKey||e.ctrlKey||e.metaKey)return;
+    if(e.code==='Space'){e.preventDefault();playing?pause():play();}
+    if(e.key==='ArrowRight'){e.preventDefault();goToStep(Math.min(chapters.length-1,chapterAt(t)+1));}
+    if(e.key==='ArrowLeft'){e.preventDefault();goToStep(Math.max(0,chapterAt(t)-1));}
+  });
+  draw();
+})();
+</script>
+</body>
+</html>
