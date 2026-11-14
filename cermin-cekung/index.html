@@ -384,18 +384,18 @@ body {
     $('focalVal').textContent=Math.round(state.F)+' cm';
     $('heightVal').textContent=Math.round(state.h)+' cm';
     $('imageDistance').innerHTML=q.atFocus?'∞':fmt(q.v)+' <small>cm</small>';
-    $('magnification').innerHTML=q.atFocus?'∞':fmt(q.m)+' <small>×</small>';
-    $('imageHeight').innerHTML=q.atFocus?'∞':fmt(q.hi)+' <small>cm</small>';
+    $('magnification').innerHTML=q.atFocus?'—':fmt(q.m)+' <small>×</small>';
+    $('imageHeight').innerHTML=q.atFocus?'—':fmt(q.hi)+' <small>cm</small>';
     $('imageDistanceFoot').textContent=q.atFocus?'Tidak ada jarak bayangan berhingga':q.real?'Positif = di depan cermin':'Negatif = di belakang cermin';
-    $('magnificationFoot').textContent=q.atFocus?'Sinar pantul saling sejajar':q.real?'Negatif = terbalik':'Positif = tegak';
-    $('imageHeightFoot').textContent=q.atFocus?'Bayangan berada di tak hingga':q.real?'Negatif = di bawah sumbu':'Positif = di atas sumbu';
+    $('magnificationFoot').textContent=q.atFocus?'Tidak ada perbesaran berhingga':q.real?'Negatif = terbalik':'Positif = tegak';
+    $('imageHeightFoot').textContent=q.atFocus?'Tidak ada tinggi bayangan berhingga':q.real?'Negatif = di bawah sumbu':'Positif = di atas sumbu';
     $('imageLocation').textContent=pr.zone;
     $('imageLocationFoot').textContent=q.atFocus?'Tidak terbentuk di jarak berhingga':pr.kind+' · '+pr.orient.toLowerCase()+' · '+pr.size.toLowerCase();
     $('propKind').textContent=pr.kind;
     $('propOrientation').textContent=pr.orient;
     $('propSize').textContent=pr.size;
     $('insightText').textContent=pr.insight;
-    $('formulaStep').textContent=q.atFocus?'Untuk s = f = '+fmt(state.F,0)+' cm, berlaku 1/s′ = 0 sehingga s′ menuju tak hingga.':
+    $('formulaStep').textContent=q.atFocus?'Untuk s = f = '+fmt(state.F,0)+' cm, 1/s′ = 0 (batas s′ menuju tak hingga). Tidak ada bayangan pada jarak berhingga, sehingga M dan h′ tidak diberi nilai berhingga.':
       'Untuk s = '+fmt(state.s,0)+' cm dan f = +'+fmt(state.F,0)+' cm, diperoleh s′ = '+fmt(q.v)+' cm.';
     document.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',Math.abs(state.s-presetDistance(b.dataset.mode))<.5));
     paint();
@@ -469,7 +469,7 @@ body {
     const arcH=Math.min(h*.35,ho*ys*1.8+47),curve=Math.min(21,Math.max(12,w*.023));
     ctx.save();ctx.lineCap='round';ctx.beginPath();
     ctx.moveTo(mirrorX-curve,axisY-arcH);
-    ctx.quadraticCurveTo(mirrorX+curve*1.65,axisY,mirrorX-curve,axisY+arcH);
+    ctx.quadraticCurveTo(mirrorX+curve,axisY,mirrorX-curve,axisY+arcH);
     ctx.strokeStyle='#73998b24';ctx.lineWidth=14;ctx.stroke();
     ctx.strokeStyle='#5f8c86';ctx.lineWidth=4;ctx.stroke();
     ctx.strokeStyle='#f7fbf7';ctx.lineWidth=1.25;ctx.stroke();
