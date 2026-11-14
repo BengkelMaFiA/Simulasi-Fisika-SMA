@@ -277,6 +277,15 @@ body {
 .footer a{color:#326f61;text-underline-offset:3px;font-weight:700}
 .footer a:hover{color:#205344}
 @media(max-width:570px){.topbar{gap:12px}.nav-links{width:100%;justify-content:space-between}.back-link{font-size:13px}}
+
+/* The same dedicated measurement space is used by all three optics diagrams. */
+.canvas-wrap canvas{min-height:360px}
+.dimension-note{margin:0 20px 16px;font-size:13px;line-height:1.65;color:#5b7365}
+@media(max-width:570px){
+  .canvas-wrap canvas{min-height:390px}
+  .dimension-note{margin:0 12px 15px;font-size:12.5px}
+}
+
 </style>
 </head>
 <body>
@@ -302,7 +311,7 @@ body {
             <div class="canvas-hint">↔ Seret panah benda atau gunakan slider</div>
           </div>
           <div class="legend" aria-label="Keterangan warna sinar"><span><i style="background:#b77c3f"></i>Sinar sejajar</span><span><i style="background:#2a8679"></i>Sinar ke titik kutub</span><span><i style="background:#567cab"></i>Sinar menuju F</span><span><i class="dashed"></i>Perpanjangan sinar</span></div>
-          <div class="caption">Garis putus-putus di belakang cermin adalah <strong>perpanjangan imajiner</strong> sinar pantul, bukan cahaya yang benar-benar melewati cermin. Diagram memakai pendekatan sinar paraksial.</div>
+          <div class="caption">Garis putus-putus di belakang cermin adalah <strong>perpanjangan imajiner</strong> sinar pantul, bukan cahaya yang benar-benar melewati cermin. Diagram memakai pendekatan sinar paraksial.</div><div class="dimension-note">Pita ukur di bawah diagram: garis putus-putus abu-hijau menunjukkan <strong>besar jarak geometris</strong>. Nilai jarak bertanda tetap ditampilkan di panel hasil.</div>
         </div>
         <aside class="panel control-panel" aria-label="Pengaturan simulasi">
           <div class="full"><div class="panel-title"><span class="tiny-symbol">⚙</span> Panel eksperimen</div><p class="control-intro">Atur parameter dan perhatikan pergeseran bayangan.</p></div>
@@ -363,13 +372,51 @@ body {
     function arrow(points, stroke, width=2, alpha=1){path(points,stroke,width,[],alpha);if(points.length<2)return;const a=points[points.length-2],b=points[points.length-1];const dx=b[0]-a[0],dy=b[1]-a[1],angle=Math.atan2(dy,dx),len=9;ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=stroke;ctx.beginPath();ctx.moveTo(b[0],b[1]);ctx.lineTo(b[0]-len*Math.cos(angle-.52),b[1]-len*Math.sin(angle-.52));ctx.lineTo(b[0]-len*Math.cos(angle+.52),b[1]-len*Math.sin(angle+.52));ctx.closePath();ctx.fill();ctx.restore();}
     function txt(s,x,y,{size=13,color='#425e52',align='center',weight=600,bg=false}={}){ctx.save();ctx.font=`${weight} ${size}px Segoe UI,Arial,sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';if(bg){let wid=ctx.measureText(s).width;ctx.fillStyle='#ffffffed';ctx.fillRect(x-wid/2-5,y-size/2-4,wid+10,size+8)}ctx.fillStyle=color;ctx.fillText(s,x,y);ctx.restore();}
     function dot(x,y,r,fill,border){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();if(border){ctx.strokeStyle=border;ctx.lineWidth=2;ctx.stroke()}}
+
+    // Shared dimension-ruler design for all mirror simulations.
+    // Distances are geometric magnitudes, so |s′| is always nonnegative here.
+    function drawDistanceRuler(w,h,measurements){
+      const bandHeight=116,top=h-bandHeight;
+      ctx.save();
+      ctx.fillStyle='#f5f8f5';ctx.fillRect(0,top,w,bandHeight);
+      ctx.strokeStyle='#d8e4dc';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(0,top+.5);ctx.lineTo(w,top+.5);ctx.stroke();
+      measurements.slice(0,2).forEach((m,i)=>{
+        const y=top+28+i*43;
+        const valid=Number.isFinite(m.x1)&&Number.isFinite(m.x2)
+          &&m.x1>=15&&m.x1<=w-15&&m.x2>=15&&m.x2<=w-15
+          &&Math.abs(m.x2-m.x1)>=3;
+        if(valid){
+          ctx.strokeStyle='#587268';ctx.lineWidth=1.8;
+          ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(m.x1,y);ctx.lineTo(m.x2,y);ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.lineWidth=1.9;ctx.beginPath();
+          ctx.moveTo(m.x1,y-6);ctx.lineTo(m.x1,y+6);
+          ctx.moveTo(m.x2,y-6);ctx.lineTo(m.x2,y+6);
+          ctx.stroke();
+        }
+        // Label has a separate white background, not a ray-colored stroke.
+        const label=valid?m.label:m.offscreenLabel||m.label;
+        let size=13;
+        ctx.font='700 '+size+'px "Segoe UI",Arial,sans-serif';
+        let measure=ctx.measureText(label).width;
+        if(measure>w-34){size=11.5;ctx.font='700 '+size+'px "Segoe UI",Arial,sans-serif';measure=ctx.measureText(label).width;}
+        const labelX=valid?(m.x1+m.x2)/2:(m.fallbackX||w/2);
+        const x=Math.max(measure/2+13,Math.min(w-measure/2-13,labelX));
+        const labelY=y+18;
+        ctx.fillStyle='#ffffff';ctx.fillRect(x-measure/2-9,labelY-size/2-4,measure+18,size+8);
+        ctx.fillStyle='#324e43';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,x,labelY);
+      });
+      ctx.restore();
+    }
+
     function paint(){
       const {w,h,dpr}=dimensions;if(!w||!h)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
-      const {s,F,h:ho}=state, {v,hi}=calc();const left=Math.max(1.17*s,2*F,47),right=Math.max(2.35*F,33);
+      const {s,F,h:ho}=state, {v,hi}=calc();const plotH=h-116;const left=Math.max(1.17*s,2*F,47),right=Math.max(2.35*F,33);
       const marginL=w<460?22:42,marginR=w<460?20:37;
       const xScale=(w-marginL-marginR)/(left+right);const mirrorX=marginL+left*xScale;
-      const axisY=h*(w<550?.59:.58);
-      const yMax=Math.max(ho*2.0,24);const ys=(h*.45)/yMax;
+      const axisY=plotH*.60;
+      const yMax=Math.max(ho*2.0,24);const ys=Math.min((axisY-50)/yMax,(plotH-axisY-20)/yMax);
       const X=x=>mirrorX+x*xScale,Y=y=>axisY-y*ys;
       const p=(x,y)=>[X(x),Y(y)]; const top=16,bottom=h-22;
       geom={X,Y,mirrorX,axisY,xScale,objectX:X(-s),objectY:Y(ho),w,h,left,right};
@@ -414,11 +461,10 @@ body {
       // Labels positioned around optical elements.
       txt('BENDA',objX,objTop-22,{size:13,color:color.object,weight:800,bg:true});
       txt('BAYANGAN MAYA',Math.min(w-76,Math.max(80,imgX)),imgTop-25,{size:w<480?12:13,color:color.image,weight:800,bg:true});
-      if(w>510){const lblY=Math.min(h-23,axisY+53);path([[objX,lblY-12],[mirrorX,lblY-12]],'#92ab9e80',1,[3,4]);txt(`s = ${Math.round(s)} cm`,(objX+mirrorX)/2,lblY,{size:12,color:'#638277'});}
-      // Measure s' with a small bracket below the axis.
-      const yMeas=axisY+39;
-      if(imgX-mirrorX>25){path([[mirrorX,yMeas],[imgX,yMeas]],color.image,1.2,[],.65);path([[mirrorX,yMeas-4],[mirrorX,yMeas+4]],color.image,1,[],.65);path([[imgX,yMeas-4],[imgX,yMeas+4]],color.image,1,[],.65)}
-      if(w>520 && imgX-mirrorX>65)txt(`|s′| = ${fmt(-v,1)} cm`,(mirrorX+imgX)/2,axisY+59,{size:12,color:color.image});
+      drawDistanceRuler(w,h,[
+        {x1:objX,x2:mirrorX,label:`s = ${Math.round(s)} cm`},
+        {x1:mirrorX,x2:imgX,label:`|s′| = ${fmt(-v,1)} cm`}
+      ]);
       // Hand-drawn handle: ghost halo to invite movement.
       ctx.save();ctx.strokeStyle='#b9654b75';ctx.lineWidth=1.6;ctx.setLineDash([3,5]);ctx.beginPath();ctx.arc(objX,objTop,13,0,Math.PI*2);ctx.stroke();ctx.restore();
     }
