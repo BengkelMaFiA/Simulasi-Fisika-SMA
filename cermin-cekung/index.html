@@ -280,6 +280,15 @@ body {
 .footer a{color:#326f61;text-underline-offset:3px;font-weight:700}
 .footer a:hover{color:#205344}
 @media(max-width:570px){.topbar{gap:12px}.nav-links{width:100%;justify-content:space-between}.back-link{font-size:13px}}
+
+/* The same dedicated measurement space is used by all three optics diagrams. */
+.canvas-wrap canvas{min-height:360px}
+.dimension-note{margin:0 20px 16px;font-size:13px;line-height:1.65;color:#5b7365}
+@media(max-width:570px){
+  .canvas-wrap canvas{min-height:390px}
+  .dimension-note{margin:0 12px 15px;font-size:12.5px}
+}
+
 </style>
 </head>
 <body>
@@ -305,7 +314,7 @@ body {
             <div class="canvas-hint">↔ Seret panah benda atau gunakan slider</div>
           </div>
           <div class="legend" aria-label="Keterangan warna sinar"><span><i style="background:#b77c3f"></i>Sinar sejajar</span><span><i style="background:#2a8679"></i>Sinar ke titik kutub</span><span><i style="background:#567cab"></i>Sinar melalui F / bantu</span><span><i class="dashed"></i>Perpanjangan sinar</span></div>
-          <div class="caption">Garis utuh menunjukkan lintasan sinar nyata. Ketika benda berada <strong>di dalam fokus</strong>, garis putus-putus adalah perpanjangan imajiner sinar pantul. Sinar ketiga menjadi sinar bantu jika lintasan menuju F berada di luar bidang diagram. Digunakan pendekatan paraksial.</div>
+          <div class="caption">Garis utuh menunjukkan lintasan sinar nyata. Ketika benda berada <strong>di dalam fokus</strong>, garis putus-putus adalah perpanjangan imajiner sinar pantul. Sinar ketiga menjadi sinar bantu jika lintasan menuju F berada di luar bidang diagram. Digunakan pendekatan paraksial.</div><div class="dimension-note">Pita ukur di bawah diagram: garis putus-putus abu-hijau menunjukkan <strong>besar jarak geometris</strong>. Nilai jarak bertanda tetap ditampilkan di panel hasil.</div>
         </div>
         <aside class="panel control-panel" aria-label="Pengaturan simulasi">
           <div class="full"><div class="panel-title"><span class="tiny-symbol">⚙</span> Panel eksperimen</div><p class="control-intro">Atur parameter dan perhatikan pergeseran bayangan.</p></div>
@@ -438,20 +447,58 @@ body {
     ctx.fillStyle=fill;ctx.fill();
     if(border){ctx.strokeStyle=border;ctx.lineWidth=2;ctx.stroke();}
   }
+
+    // Shared dimension-ruler design for all mirror simulations.
+    // Distances are geometric magnitudes, so |s′| is always nonnegative here.
+    function drawDistanceRuler(w,h,measurements){
+      const bandHeight=116,top=h-bandHeight;
+      ctx.save();
+      ctx.fillStyle='#f5f8f5';ctx.fillRect(0,top,w,bandHeight);
+      ctx.strokeStyle='#d8e4dc';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(0,top+.5);ctx.lineTo(w,top+.5);ctx.stroke();
+      measurements.slice(0,2).forEach((m,i)=>{
+        const y=top+28+i*43;
+        const valid=Number.isFinite(m.x1)&&Number.isFinite(m.x2)
+          &&m.x1>=15&&m.x1<=w-15&&m.x2>=15&&m.x2<=w-15
+          &&Math.abs(m.x2-m.x1)>=3;
+        if(valid){
+          ctx.strokeStyle='#587268';ctx.lineWidth=1.8;
+          ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(m.x1,y);ctx.lineTo(m.x2,y);ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.lineWidth=1.9;ctx.beginPath();
+          ctx.moveTo(m.x1,y-6);ctx.lineTo(m.x1,y+6);
+          ctx.moveTo(m.x2,y-6);ctx.lineTo(m.x2,y+6);
+          ctx.stroke();
+        }
+        // Label has a separate white background, not a ray-colored stroke.
+        const label=valid?m.label:m.offscreenLabel||m.label;
+        let size=13;
+        ctx.font='700 '+size+'px "Segoe UI",Arial,sans-serif';
+        let measure=ctx.measureText(label).width;
+        if(measure>w-34){size=11.5;ctx.font='700 '+size+'px "Segoe UI",Arial,sans-serif';measure=ctx.measureText(label).width;}
+        const labelX=valid?(m.x1+m.x2)/2:(m.fallbackX||w/2);
+        const x=Math.max(measure/2+13,Math.min(w-measure/2-13,labelX));
+        const labelY=y+18;
+        ctx.fillStyle='#ffffff';ctx.fillRect(x-measure/2-9,labelY-size/2-4,measure+18,size+8);
+        ctx.fillStyle='#324e43';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,x,labelY);
+      });
+      ctx.restore();
+    }
+
   function paint(){
     const {w,h,dpr}=dimensions;
     if(!w||!h)return;
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
     ctx.fillStyle='#fbfcf9';ctx.fillRect(0,0,w,h);
-    const {s,F,h:ho}=state,q=calc();
+    const {s,F,h:ho}=state,q=calc(),plotH=h-116;
     const left=Math.max(s*1.19,F*2.38,48,q.real?Math.min(q.v*1.14,175):0);
     const right=Math.max(F*.95,25,q.virtual?Math.min(-q.v*1.17,150):0);
     const marginL=w<460?20:39,marginR=w<460?20:35,mirrorX=marginL+left/(left+right)*(w-marginL-marginR);
-    const xScale=(w-marginL-marginR)/(left+right),axisY=h*(w<550?.52:.52);
+    const xScale=(w-marginL-marginR)/(left+right),axisY=plotH*.60;
     const hBound=Math.max(ho*1.55,19,Number.isFinite(q.hi)?Math.min(Math.abs(q.hi)*1.12,32):0);
-    const ys=Math.min((axisY-35)/hBound,(h-axisY-35)/hBound);
+    const ys=Math.min((axisY-34)/hBound,(plotH-axisY-22)/hBound);
     const X=x=>mirrorX+x*xScale,Y=y=>axisY-y*ys,p=(x,y)=>[X(x),Y(y)];
-    const yTop=(axisY-20)/ys,yBot=-(h-axisY-20)/ys;
+    const yTop=(axisY-20)/ys,yBot=-(plotH-axisY-20)/ys;
     geom={mirrorX,axisY,xScale,objectX:X(-s),objectY:Y(ho),left,right,w,h};
     // Background aid: grid is optional and kept visually restrained.
     if(toggles.grid.checked){
@@ -530,7 +577,14 @@ body {
     }else{
       txt('BAYANGAN DI TAK HINGGA',w*.5,h-21,{size:12,color:'#3e7769',weight:750,bg:true});
     }
-    if(w>540)txt('s = '+Math.round(s)+' cm',Math.min(w-55,Math.max(63,(objX+mirrorX)/2)),Math.min(h-18,axisY+55),{size:12,color:'#638277'});
+    const imageX=q.atFocus?NaN:X(-q.v);
+    drawDistanceRuler(w,h,[
+      {x1:objX,x2:mirrorX,label:'s = '+Math.round(s)+' cm'},
+      {x1:mirrorX,x2:imageX,
+       label:'|s′| = '+fmt(Math.abs(q.v),1)+' cm',
+       offscreenLabel:q.atFocus?'s′ → ∞ (benda tepat di F)':'|s′| = '+fmt(Math.abs(q.v),1)+' cm · di luar gambar',
+       fallbackX:Math.min(w-100,Math.max(100,mirrorX))}
+    ]);
   }
   function pause(){playing=false;$('animateBtn').textContent='▶ Otomatis';$('animateBtn').setAttribute('aria-pressed','false');}
   function animate(ts){
