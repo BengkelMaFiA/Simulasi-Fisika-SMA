@@ -272,16 +272,24 @@ body {
   .math{font-size:22px}
   .footer{font-size:12.5px}
 }
-  </style>
+  
+/* Navigation and social-link styling shared across the mirror laboratories */
+.back-link{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:#397465;background:#eff6ef;border:1px solid #d7e7d8;padding:9px 13px;border-radius:11px;font-size:13px;font-weight:720;min-height:42px;transition:background .2s}
+.back-link:hover{background:#e1f0e4}
+.nav-links{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.footer a{color:#326f61;text-underline-offset:3px;font-weight:700}
+.footer a:hover{color:#205344}
+@media(max-width:570px){.topbar{gap:12px}.nav-links{width:100%;justify-content:space-between}.back-link{font-size:13px}}
+</style>
 </head>
 <body>
   <div class="shell">
     <nav class="topbar" aria-label="Navigasi utama">
       <div class="brand"><span class="logo" aria-hidden="true">B</span> BengkelMaFiA <span style="color:#7d9487;font-weight:400">/ LAB</span></div>
-      <div class="topic">FISIKA SMA · OPTIKA GEOMETRIS</div>
+      <div class="nav-links"><a class="back-link" href="../" aria-label="Kembali ke halaman utama">← Halaman utama</a><div class="topic">FISIKA SMA · OPTIKA GEOMETRIS</div></div>
     </nav>
     <header>
-      <div><div class="eyebrow">Laboratorium Virtual 01</div><h1>Menjelajahi <span>Cermin Cekung</span></h1><p class="lead">Geser benda melewati pusat kelengkungan dan fokus. Amati bagaimana bayangan berubah dari nyata dan terbalik menjadi maya dan tegak.</p></div>
+      <div><div class="eyebrow">Laboratorium Virtual 02</div><h1>Menjelajahi <span>Cermin Cekung</span></h1><p class="lead">Geser benda melewati pusat kelengkungan dan fokus. Amati bagaimana bayangan berubah dari nyata dan terbalik menjadi maya dan tegak.</p></div>
       <div class="status"><span class="status-dot"></span> SIMULASI AKTIF</div>
     </header>
     <main>
@@ -323,7 +331,7 @@ body {
         <article class="panel info-box"><h2 class="h2">Persamaan cermin</h2><div class="math" aria-label="Satu per f sama dengan satu per s ditambah satu per s aksen">1/f = 1/s + 1/s′</div><div class="math" aria-label="Perbesaran sama dengan negatif s aksen dibagi s sama dengan h aksen dibagi h">M = −s′/s = h′/h</div><div class="math-note">Konvensi tanda: benda nyata s &gt; 0; cermin cekung f &gt; 0; bayangan nyata s′ &gt; 0, sedangkan bayangan maya s′ &lt; 0. Perbesaran M negatif untuk bayangan terbalik dan positif untuk bayangan tegak. <span id="formulaStep"></span></div></article>
       </section>
     </main>
-    <footer class="footer"><span>© BengkelMaFiA · Laboratorium Optika SMA</span><span>Dibuat untuk belajar dan bereksperimen · Berjalan secara offline</span></footer>
+    <footer class="footer"><span>© BengkelMaFiA · Laboratorium Optika SMA</span><span>Dibuat untuk belajar dan bereksperimen · Berjalan secara offline</span><span>YouTube: <a href="https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA" target="_blank" rel="noopener noreferrer">Channel BengkelMaFiA ↗</a></span></footer>
   </div>
   <script>
 (() => {
