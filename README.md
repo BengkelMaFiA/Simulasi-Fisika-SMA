@@ -4,29 +4,34 @@ Laboratorium virtual berbasis HTML, CSS, dan JavaScript yang dapat dibuka melalu
 
 ## Simulasi yang tersedia
 
-### 1. Cermin Cembung
-- File utama: [cermin-cembung/index.html](cermin-cembung/index.html)
-- Ubah **jarak benda**, **panjang fokus**, dan **tinggi benda**.
-- Amati **tiga sinar utama**, **perpanjangan sinar maya**, dan **posisi bayangan**.
-- Periksa **jarak bayangan**, **perbesaran**, dan **tinggi bayangan** secara real-time.
-- Tersedia animasi otomatis, reset, serta penyimpanan diagram ke PNG.
-
-**Konvensi tanda:** untuk benda nyata di depan cermin cembung, `s > 0`, `f < 0`, `s' < 0`, dan `0 < M < 1`. Bayangan bersifat **maya, tegak, dan diperkecil**. Gunakan persamaan `1/f = 1/s + 1/s'` dan `M = -s'/s = h'/h`.
+### 1. Cermin Datar
+- File utama: [cermin-datar/index.html](cermin-datar/index.html)
+- **Mode hukum pemantulan:** ubah sudut datang `θᵢ`, amati sudut pantul `θᵣ` yang sama besar; keduanya diukur terhadap **garis normal**, bukan permukaan.
+- **Mode pembentukan bayangan:** ubah jarak dan tinggi benda. Bayangan **maya, tegak, sama besar**, dan berada simetris di belakang cermin.
+- Simulasi memperlihatkan sinar, garis normal, busur sudut, perpanjangan sinar maya, animasi, reset, dan ekspor diagram PNG.
+- Konvensi: `θᵢ = θᵣ`, `s′ = −s`, `M = +1`, `h′ = h`.
 
 ### 2. Cermin Cekung
 - File utama: [cermin-cekung/index.html](cermin-cekung/index.html)
-- Geser benda di **luar C**, **di C**, **antara C dan F**, **tepat di F**, dan **di dalam F**.
-- Amati perbedaan bayangan **nyata dan maya**, **terbalik dan tegak**, serta **diperbesar dan diperkecil**.
-- Pada `s = f`, sinar pantul sejajar dan bayangan berada di tak hingga. Diagram menanganinya tanpa pembagian dengan nol.
-- Ubah jarak benda, fokus, dan tinggi benda; aktifkan atau nonaktifkan garis bantu; gunakan animasi, reset, atau simpan PNG.
+- Geser benda **di luar C, tepat C, antara C dan F, tepat F, dan di dalam F**.
+- Bandingkan bayangan nyata/maya, terbalik/tegak, diperbesar/diperkecil.
+- Pada `s = f`, sinar pantul sejajar dan bayangan berada di tak hingga.
+- Konvensi: `f > 0`, `s′ > 0` untuk bayangan nyata, `s′ < 0` untuk bayangan maya, dan `M = −s′/s`.
 
-**Konvensi tanda:** untuk cermin cekung `f > 0`. Jarak bayangan `s' > 0` untuk bayangan nyata di depan cermin dan `s' < 0` untuk bayangan maya di belakangnya. Perbesaran `M = -s'/s` bertanda negatif untuk bayangan terbalik.
+### 3. Cermin Cembung
+- File utama: [cermin-cembung/index.html](cermin-cembung/index.html)
+- Ubah **jarak benda**, **besar panjang fokus**, dan **tinggi benda**.
+- Amati sinar utama, perpanjangan sinar maya, posisi bayangan, dan hasil numeriknya.
+- Bayangan senantiasa **maya, tegak, diperkecil** untuk benda nyata di depan cermin.
+- Konvensi: `f < 0`, `s′ < 0`, dan `0 < M < 1`.
+
+Semua halaman simulasi memiliki tautan kembali ke [halaman utama](index.html) dan tautan ke [kanal YouTube BengkelMaFiA](https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA).
 
 ## Membuka simulasi
 
-Buka `cermin-cembung/index.html` atau `cermin-cekung/index.html` dalam Chrome, Edge, atau browser modern lainnya. Tidak memerlukan backend, akun, atau pustaka eksternal.
+Buka salah satu file `cermin-datar/index.html`, `cermin-cekung/index.html`, atau `cermin-cembung/index.html` di Chrome, Edge, atau browser modern lainnya. Tidak memerlukan backend, akun, atau pustaka eksternal.
 
-Jika GitHub Pages diaktifkan dengan sumber **main / (root)**, halaman depan berada di URL project Pages dan simulasi berada di subdirektori `/cermin-cembung/` dan `/cermin-cekung/`.
+Jika GitHub Pages diaktifkan dengan sumber **main / (root)**, halaman depan berada di URL project Pages dan simulasi berada di subdirektori `/cermin-datar/`, `/cermin-cekung/`, dan `/cermin-cembung/`.
 
 > **Catatan publikasi:** Repository ini awalnya private. Ketersediaan GitHub Pages untuk repository private bergantung pada paket GitHub. GitHub Free memerlukan repository public untuk GitHub Pages. Jangan ubah visibility tanpa meninjau apa yang akan dibagikan.
 
