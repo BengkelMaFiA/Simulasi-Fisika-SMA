@@ -143,6 +143,7 @@ h1 em{font-style:normal;color:var(--coral);position:relative}
   document.getElementById("root").innerHTML='<div class="boot-msg"><strong>React belum berhasil dimuat.</strong> Halaman ini membutuhkan koneksi internet untuk mengunduh dua berkas React dari CDN. Coba muat ulang ketika terhubung internet. Tautan <a href="../">kembali ke halaman utama</a> tetap tersedia.</div>';
   return;
  }
+ const React=window.React,ReactDOM=window.ReactDOM;
  const E=React.createElement;
  const {useState,useEffect,useRef,useMemo}=React;
  const DURATION=48;
