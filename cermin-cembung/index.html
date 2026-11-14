@@ -196,6 +196,79 @@ canvas{width:100%;height:auto;aspect-ratio:1.76;min-height:310px;display:block;t
   .info-box{padding:20px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  /* Typography pass — readable without altering simulation behavior. */
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.brand{font-size:15px;letter-spacing:.025em}
+.topic{font-size:13px}
+.eyebrow{font-size:13px;letter-spacing:.13em}
+.lead{font-size:clamp(15px,1.5vw,17px);line-height:1.8}
+.status{font-size:13px}
+.panel-title{font-size:16px;line-height:1.5}
+.ghost-btn{font-size:14px;min-height:43px;padding:10px 13px}
+.canvas-tag{font-size:12px;line-height:1.45;letter-spacing:.012em}
+.canvas-hint{font-size:13px;line-height:1.45}
+.legend{font-size:14px;line-height:1.6;gap:12px 23px}
+.legend i{width:23px}
+.caption{font-size:14px;line-height:1.8}
+.control-panel{gap:21px}
+.control-intro{font-size:14px;line-height:1.75}
+.field-row{margin-bottom:13px}
+.field-name{font-size:15px;line-height:1.5}
+.field-name small{font-size:13px;line-height:1.5;margin-top:4px}
+.value{font-size:16px;line-height:1.4}
+.track{height:14px}
+.range-end{font-size:12px;line-height:1.5}
+.switch-title{font-size:14px;line-height:1.5}
+.switch-sub{font-size:13px;line-height:1.6}
+.switch{width:43px;height:25px}
+.switch span{width:43px;height:25px}
+.switch span:after{width:19px;height:19px}
+.switch input:checked+span:after{transform:translateX(18px)}
+.pill{font-size:14px;min-height:43px;line-height:1.45;padding:10px 12px}
+.stat-label{font-size:13px;line-height:1.5}
+.stat-value{font-size:clamp(22px,2.25vw,30px)}
+.stat-value small{font-size:14px}
+.stat-foot{font-size:13px;line-height:1.55}
+.stat:last-child .stat-value{font-size:clamp(19px,1.8vw,23px)!important;white-space:normal}
+.h2{font-size:19px;line-height:1.45}
+.chip{font-size:13px;line-height:1.5;padding:7px 13px}
+.body-copy{font-size:15px;line-height:1.85}
+.math{font-size:24px;line-height:1.55}
+.math-note{font-size:14px;line-height:1.8}
+.insight{font-size:14px;line-height:1.8}
+.footer{font-size:13px;line-height:1.7}
+@media(max-width:900px){
+  .workspace{align-items:start}
+  .control-panel{gap:22px}
+}
+@media(max-width:570px){
+  .brand{font-size:14px}
+  .topic{font-size:12px}
+  .eyebrow{font-size:12px}
+  .lead{font-size:15px}
+  .panel-head{gap:12px}
+  .panel-title{font-size:15px}
+  .ghost-btn{font-size:13px;min-height:42px;padding:9px 11px}
+  .canvas-tag{font-size:11px;line-height:1.4}
+  .canvas-hint{font-size:12px;line-height:1.5}
+  canvas{min-height:335px}
+  .legend{font-size:13px;gap:10px 14px}
+  .caption{font-size:13.5px}
+  .control-panel{gap:21px}
+  .field-row{flex-wrap:wrap}
+  .stat-label{font-size:12.5px}
+  .stat-value{font-size:22px}
+  .stat-foot{font-size:12px}
+  .stat:last-child .stat-value{font-size:18px!important}
+  .info-box{padding:21px}
+  .body-copy{font-size:15px}
+  .math{font-size:22px}
+  .footer{font-size:12.5px}
+}
   </style>
 </head>
 <body>
@@ -280,7 +353,7 @@ canvas{width:100%;height:auto;aspect-ratio:1.76;min-height:310px;display:block;t
     const color = {amber:'#b77c3f',aqua:'#2a8679',blue:'#567cab',line:'#82948e',object:'#b9654b',image:'#358368'};
     function path(points, stroke, width=2, dash=[], alpha=1){if(points.length<2)return;ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.beginPath();ctx.moveTo(...points[0]);for(let i=1;i<points.length;i++)ctx.lineTo(...points[i]);ctx.stroke();ctx.restore();}
     function arrow(points, stroke, width=2, alpha=1){path(points,stroke,width,[],alpha);if(points.length<2)return;const a=points[points.length-2],b=points[points.length-1];const dx=b[0]-a[0],dy=b[1]-a[1],angle=Math.atan2(dy,dx),len=9;ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=stroke;ctx.beginPath();ctx.moveTo(b[0],b[1]);ctx.lineTo(b[0]-len*Math.cos(angle-.52),b[1]-len*Math.sin(angle-.52));ctx.lineTo(b[0]-len*Math.cos(angle+.52),b[1]-len*Math.sin(angle+.52));ctx.closePath();ctx.fill();ctx.restore();}
-    function txt(s,x,y,{size=12,color='#425e52',align='center',weight=600,bg=false}={}){ctx.save();ctx.font=`${weight} ${size}px Inter,Segoe UI,sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';if(bg){let wid=ctx.measureText(s).width;ctx.fillStyle='#ffffffed';ctx.fillRect(x-wid/2-5,y-size/2-4,wid+10,size+8)}ctx.fillStyle=color;ctx.fillText(s,x,y);ctx.restore();}
+    function txt(s,x,y,{size=13,color='#425e52',align='center',weight=600,bg=false}={}){ctx.save();ctx.font=`${weight} ${size}px Segoe UI,Arial,sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';if(bg){let wid=ctx.measureText(s).width;ctx.fillStyle='#ffffffed';ctx.fillRect(x-wid/2-5,y-size/2-4,wid+10,size+8)}ctx.fillStyle=color;ctx.fillText(s,x,y);ctx.restore();}
     function dot(x,y,r,fill,border){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();if(border){ctx.strokeStyle=border;ctx.lineWidth=2;ctx.stroke()}}
     function paint(){
       const {w,h,dpr}=dimensions;if(!w||!h)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
@@ -296,13 +369,13 @@ canvas{width:100%;height:auto;aspect-ratio:1.76;min-height:310px;display:block;t
       // Shaded region behind the mirror is not physically illuminated by the reflected rays.
       ctx.fillStyle='#d9eae03d';ctx.fillRect(mirrorX,0,Math.max(0,w-mirrorX),h);
       path([[15,axisY],[w-14,axisY]],'#849b90',1.5,[6,6],.75);
-      if(w>450)txt('SUMBU UTAMA',w-24,axisY-13,{size:9,color:'#748f82',align:'right',weight:700});
+      if(w>450)txt('SUMBU UTAMA',w-24,axisY-13,{size:12,color:'#748f82',align:'right',weight:700});
       // Mirror: curved reflecting surface, with subtle hatch marks on its opaque back.
       const arcH=Math.min(h*.34,ho*ys*1.9+48),curve=Math.min(21,Math.max(12,w*.020));
       ctx.save();ctx.lineCap='round';ctx.beginPath();ctx.moveTo(mirrorX+curve,axisY-arcH);ctx.quadraticCurveTo(mirrorX-curve*.98,axisY,mirrorX+curve,axisY+arcH);ctx.strokeStyle='#73998b24';ctx.lineWidth=14;ctx.stroke();ctx.strokeStyle='#5f8c86';ctx.lineWidth=4;ctx.stroke();ctx.strokeStyle='#f7fbf7';ctx.lineWidth=1.2;ctx.stroke();
       for(let q=-arcH+6;q<arcH-1;q+=10){const x=mirrorX+curve*(1-Math.sqrt(Math.max(0,1-(q/arcH)**2)))+5;path([[x,axisY+q],[x+8,axisY+q-7]],'#7d9a875f',1.5)}ctx.restore();
       const fx=X(F),cx=X(2*F);dot(fx,axisY,4.5,color.amber,'#fff8ed');dot(cx,axisY,4,'#729289');dot(mirrorX,axisY,3.5,'#568278');
-      txt('P',mirrorX+1,axisY+22,{size:12,color:'#456c5e'});txt('F',fx,axisY+22,{size:12,color:color.amber});if(cx<w-13)txt('C',cx,axisY+22,{size:12,color:'#668477'});
+      txt('P',mirrorX+1,axisY+22,{size:14,color:'#456c5e'});txt('F',fx,axisY+22,{size:14,color:color.amber});if(cx<w-13)txt('C',cx,axisY+22,{size:14,color:'#668477'});
       // Three ideal principal rays.  The mirror reflections are calculated at the tangent plane (paraxial construction).
       const boundaryX=-left*.96;const qX=Math.min(0,-Math.max(12,left*.35));
       const colors=[color.amber,color.aqua,color.blue];
@@ -331,13 +404,13 @@ canvas{width:100%;height:auto;aspect-ratio:1.76;min-height:310px;display:block;t
       path([[imgX,axisY],[imgX,imgTop]],color.image,4);arrow([[imgX,axisY],[imgX,imgTop]],color.image,4);
       ctx.save();ctx.shadowColor='#398569';ctx.shadowBlur=12;dot(imgX,imgTop,5,color.image);ctx.restore();
       // Labels positioned around optical elements.
-      txt('BENDA',objX,objTop-22,{size:11,color:color.object,weight:850,bg:true});
-      txt('BAYANGAN MAYA',Math.min(w-76,Math.max(80,imgX)),imgTop-25,{size:w<480?9:10,color:color.image,weight:850,bg:true});
-      if(w>510){const lblY=Math.min(h-23,axisY+53);path([[objX,lblY-12],[mirrorX,lblY-12]],'#92ab9e80',1,[3,4]);txt(`s = ${Math.round(s)} cm`,(objX+mirrorX)/2,lblY,{size:11,color:'#638277'});}
+      txt('BENDA',objX,objTop-22,{size:13,color:color.object,weight:800,bg:true});
+      txt('BAYANGAN MAYA',Math.min(w-76,Math.max(80,imgX)),imgTop-25,{size:w<480?12:13,color:color.image,weight:800,bg:true});
+      if(w>510){const lblY=Math.min(h-23,axisY+53);path([[objX,lblY-12],[mirrorX,lblY-12]],'#92ab9e80',1,[3,4]);txt(`s = ${Math.round(s)} cm`,(objX+mirrorX)/2,lblY,{size:12,color:'#638277'});}
       // Measure s' with a small bracket below the axis.
       const yMeas=axisY+39;
       if(imgX-mirrorX>25){path([[mirrorX,yMeas],[imgX,yMeas]],color.image,1.2,[],.65);path([[mirrorX,yMeas-4],[mirrorX,yMeas+4]],color.image,1,[],.65);path([[imgX,yMeas-4],[imgX,yMeas+4]],color.image,1,[],.65)}
-      if(w>520 && imgX-mirrorX>65)txt(`|s′| = ${fmt(-v,1)} cm`,(mirrorX+imgX)/2,axisY+59,{size:10,color:color.image});
+      if(w>520 && imgX-mirrorX>65)txt(`|s′| = ${fmt(-v,1)} cm`,(mirrorX+imgX)/2,axisY+59,{size:12,color:color.image});
       // Hand-drawn handle: ghost halo to invite movement.
       ctx.save();ctx.strokeStyle='#b9654b75';ctx.lineWidth=1.6;ctx.setLineDash([3,5]);ctx.beginPath();ctx.arc(objX,objTop,13,0,Math.PI*2);ctx.stroke();ctx.restore();
     }
