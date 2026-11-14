@@ -330,6 +330,19 @@ body {
   .dimension-note{margin:0 12px 15px;font-size:12.5px}
 }
 
+
+/* Interaction help sits outside the canvas, never over rays or measurements. */
+.diagram-help{
+  display:flex;align-items:center;min-height:38px;
+  margin:11px 18px 0;padding:8px 12px;
+  border:1px solid #e1e9e2;border-radius:10px;
+  background:#f8faf7;color:#4f7165;
+  font:600 13px/1.55 "Segoe UI",system-ui,sans-serif;
+  position:static;pointer-events:auto;
+}
+@media(max-width:570px){
+  .diagram-help{margin:10px 10px 0;padding:9px 11px;font-size:12.5px}
+}
 </style>
 </head>
 <body>
@@ -363,10 +376,9 @@ body {
    </div>
   </div>
   <div class="canvas-wrap">
-   <div class="canvas-tag" id="canvasTag">HUKUM PEMANTULAN · SUDUT DARI NORMAL</div>
    <canvas id="scene" tabindex="0" role="img" aria-label="Diagram interaktif cermin datar. Pada mode pemantulan, sinar datang dan pantul memiliki sudut yang sama terhadap garis normal. Pada mode bayangan, benda dan bayangan maya sama jauh dari cermin."></canvas>
-   <div class="canvas-hint" id="canvasHint">↔ Seret ujung sinar datang atau gunakan slider</div>
-  </div>
+          </div>
+          <div class="diagram-help" id="canvasHint">↔ Seret ujung sinar datang atau gunakan slider</div>
   <div class="legend" aria-label="Keterangan diagram">
    <span><i style="background:#b77c3f"></i><span id="legendA">Sinar datang</span></span>
    <span><i style="background:#2a8679"></i><span id="legendB">Sinar pantul</span></span>
@@ -553,6 +565,7 @@ body {
   const yscale=Math.min((axisY-52)/(ho*1.7),(plotH-axisY-24)/(ho*1.7));
   const X=u=>px+u*scale,Y=v=>axisY-v*yscale;
   const obj=[X(-s),Y(ho)],img=[X(s),Y(ho)];
+  ctx.save();ctx.beginPath();ctx.rect(0,0,w,plotH);ctx.clip();
   geom={mode:'image',mirrorX:px,axisY,scale,objectX:obj[0],objectY:obj[1]};
   ctx.fillStyle='#eff5ef';ctx.fillRect(px,0,w-px,h);
   line([[px,19],[px,h-19]],'#608f80',4);
@@ -586,6 +599,7 @@ body {
   textDraw('BENDA',obj[0],obj[1]-24,13,C.object,'center',true,true);
   textDraw('BAYANGAN MAYA',Math.min(w-86,img[0]),img[1]-24,12,C.image,'center',true,true);
   textDraw('P',px,axisY+18,13,'#386e60','center',true);
+  ctx.restore(); // ruler is intentionally outside the clipped optical scene
   drawDistanceRuler(w,h,[
    {x1:obj[0],x2:px,label:'s = '+format(s)+' cm'},
    {x1:px,x2:img[0],label:'|s′| = '+format(s)+' cm'}
@@ -603,7 +617,7 @@ body {
   document.querySelectorAll('.image-only').forEach(el=>el.hidden=isReflection);
   if(isReflection){
    put('diagramTitle','Diagram sudut datang dan pantul');
-   put('canvasTag','HUKUM PEMANTULAN · SUDUT DARI NORMAL');
+   
    put('canvasHint','↔ Seret ujung sinar datang atau gunakan slider');
    put('legendA','Sinar datang');put('legendB','Sinar pantul');put('legendC','Garis normal');
    $('diagramCaption').innerHTML='Sudut diukur dari <strong>garis normal</strong> (tegak lurus permukaan cermin), bukan dari permukaan cermin. Sinar datang, sinar pantul, dan garis normal berada dalam satu bidang.';
@@ -620,7 +634,7 @@ body {
    put('formulaExplanation','Sudut terhadap permukaan = 90° − θ terhadap normal. Cermin datar ideal memantulkan sinar secara teratur; arah pantul mengikuti hukum pemantulan.');
   }else{
    put('diagramTitle','Diagram pembentukan bayangan maya');
-   put('canvasTag','BAYANGAN SIMETRIS · JARAK BENDA = JARAK BAYANGAN');
+   
    put('canvasHint','↔ Seret ujung benda atau gunakan slider jarak');
    put('legendA','Sinar 1');put('legendB','Sinar 2');put('legendC','Perpanjangan maya');
    $('diagramCaption').innerHTML='Bayangan berada di <strong>belakang cermin</strong> pada jarak yang sama dengan benda. Garis putus-putus merupakan perpanjangan sinar, bukan cahaya yang melewati cermin.';
