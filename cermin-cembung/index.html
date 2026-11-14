@@ -286,6 +286,19 @@ body {
   .dimension-note{margin:0 12px 15px;font-size:12.5px}
 }
 
+
+/* Interaction help sits outside the canvas, never over rays or measurements. */
+.diagram-help{
+  display:flex;align-items:center;min-height:38px;
+  margin:11px 18px 0;padding:8px 12px;
+  border:1px solid #e1e9e2;border-radius:10px;
+  background:#f8faf7;color:#4f7165;
+  font:600 13px/1.55 "Segoe UI",system-ui,sans-serif;
+  position:static;pointer-events:auto;
+}
+@media(max-width:570px){
+  .diagram-help{margin:10px 10px 0;padding:9px 11px;font-size:12.5px}
+}
 </style>
 </head>
 <body>
@@ -306,10 +319,9 @@ body {
             <div class="small-actions"><button id="animateBtn" class="ghost-btn" title="Gerakkan benda otomatis" aria-pressed="false">▶ Otomatis</button><button id="resetBtn" class="ghost-btn" title="Kembalikan pengaturan awal">↺ Reset</button><button id="saveBtn" class="ghost-btn" title="Simpan diagram sebagai gambar PNG">↓ PNG</button></div>
           </div>
           <div class="canvas-wrap">
-            <div class="canvas-tag">TAMPAK SAMPING · TIDAK HARUS BERSKALA</div>
             <canvas id="scene" role="img" tabindex="0" aria-label="Diagram cermin cembung interaktif: benda tegak di kiri cermin, sinar pantul menyebar, perpanjangannya bertemu membentuk bayangan maya di belakang cermin."></canvas>
-            <div class="canvas-hint">↔ Seret panah benda atau gunakan slider</div>
           </div>
+          <div class="diagram-help">↔ Seret panah benda atau gunakan slider</div>
           <div class="legend" aria-label="Keterangan warna sinar"><span><i style="background:#b77c3f"></i>Sinar sejajar</span><span><i style="background:#2a8679"></i>Sinar ke titik kutub</span><span><i style="background:#567cab"></i>Sinar menuju F</span><span><i class="dashed"></i>Perpanjangan sinar</span></div>
           <div class="caption">Garis putus-putus di belakang cermin adalah <strong>perpanjangan imajiner</strong> sinar pantul, bukan cahaya yang benar-benar melewati cermin. Diagram memakai pendekatan sinar paraksial.</div><div class="dimension-note">Pita ukur di bawah diagram: garis putus-putus abu-hijau menunjukkan <strong>besar jarak geometris</strong>. Nilai jarak bertanda tetap ditampilkan di panel hasil.</div>
         </div>
@@ -420,6 +432,7 @@ body {
       const X=x=>mirrorX+x*xScale,Y=y=>axisY-y*ys;
       const p=(x,y)=>[X(x),Y(y)]; const top=16,bottom=h-22;
       geom={X,Y,mirrorX,axisY,xScale,objectX:X(-s),objectY:Y(ho),w,h,left,right};
+      ctx.save();ctx.beginPath();ctx.rect(0,0,w,plotH);ctx.clip();
       if(toggles.grid.checked){ctx.save();ctx.strokeStyle='#abc1b344';ctx.lineWidth=1;const step=Math.max(10,Math.round((left+right)/11/5)*5);for(let n=Math.ceil(-left/step);n<=right/step;n++){const x=X(n*step);path([[x,0],[x,h]],'#b1c6b542',1)}for(let j=-8;j<=8;j++){const y=axisY-j*ys*5;if(y>0&&y<h)path([[0,y],[w,y]],'#b1c6b52a',1)}ctx.restore()}
       // Shaded region behind the mirror is not physically illuminated by the reflected rays.
       ctx.fillStyle='#d9eae03d';ctx.fillRect(mirrorX,0,Math.max(0,w-mirrorX),h);
@@ -461,12 +474,14 @@ body {
       // Labels positioned around optical elements.
       txt('BENDA',objX,objTop-22,{size:13,color:color.object,weight:800,bg:true});
       txt('BAYANGAN MAYA',Math.min(w-76,Math.max(80,imgX)),imgTop-25,{size:w<480?12:13,color:color.image,weight:800,bg:true});
+
+      // Hand-drawn handle: ghost halo to invite movement.
+      ctx.save();ctx.strokeStyle='#b9654b75';ctx.lineWidth=1.6;ctx.setLineDash([3,5]);ctx.beginPath();ctx.arc(objX,objTop,13,0,Math.PI*2);ctx.stroke();ctx.restore();
+      ctx.restore(); // end clipped optical scene
       drawDistanceRuler(w,h,[
         {x1:objX,x2:mirrorX,label:`s = ${Math.round(s)} cm`},
         {x1:mirrorX,x2:imgX,label:`|s′| = ${fmt(-v,1)} cm`}
       ]);
-      // Hand-drawn handle: ghost halo to invite movement.
-      ctx.save();ctx.strokeStyle='#b9654b75';ctx.lineWidth=1.6;ctx.setLineDash([3,5]);ctx.beginPath();ctx.arc(objX,objTop,13,0,Math.PI*2);ctx.stroke();ctx.restore();
     }
     function pause(){playing=false;$('animateBtn').textContent='▶ Otomatis';$('animateBtn').setAttribute('aria-pressed','false');}
     function animate(ts){if(!playing)return;if(!lastTime)lastTime=ts;const dt=Math.min(.06,(ts-lastTime)/1000);lastTime=ts;t+=dt*.8;state.s=57.5+42.5*Math.sin(t);setControls();update();requestAnimationFrame(animate)}
