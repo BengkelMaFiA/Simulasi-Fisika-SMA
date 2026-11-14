@@ -289,6 +289,19 @@ body {
   .dimension-note{margin:0 12px 15px;font-size:12.5px}
 }
 
+
+/* Interaction help sits outside the canvas, never over rays or measurements. */
+.diagram-help{
+  display:flex;align-items:center;min-height:38px;
+  margin:11px 18px 0;padding:8px 12px;
+  border:1px solid #e1e9e2;border-radius:10px;
+  background:#f8faf7;color:#4f7165;
+  font:600 13px/1.55 "Segoe UI",system-ui,sans-serif;
+  position:static;pointer-events:auto;
+}
+@media(max-width:570px){
+  .diagram-help{margin:10px 10px 0;padding:9px 11px;font-size:12.5px}
+}
 </style>
 </head>
 <body>
@@ -309,10 +322,9 @@ body {
             <div class="small-actions"><button id="animateBtn" class="ghost-btn" title="Gerakkan benda otomatis" aria-pressed="false">▶ Otomatis</button><button id="resetBtn" class="ghost-btn" title="Kembalikan pengaturan awal">↺ Reset</button><button id="saveBtn" class="ghost-btn" title="Simpan diagram sebagai gambar PNG">↓ PNG</button></div>
           </div>
           <div class="canvas-wrap">
-            <div class="canvas-tag">TAMPAK SAMPING · TIDAK HARUS BERSKALA</div>
             <canvas id="scene" role="img" tabindex="0" aria-label="Diagram cermin cekung interaktif: benda berada di kiri cermin, sinar-sinar pantul dapat bertemu membentuk bayangan nyata di depan cermin atau membentuk bayangan maya di belakang cermin."></canvas>
-            <div class="canvas-hint">↔ Seret panah benda atau gunakan slider</div>
           </div>
+          <div class="diagram-help">↔ Seret panah benda atau gunakan slider</div>
           <div class="legend" aria-label="Keterangan warna sinar"><span><i style="background:#b77c3f"></i>Sinar sejajar</span><span><i style="background:#2a8679"></i>Sinar ke titik kutub</span><span><i style="background:#567cab"></i>Sinar melalui F / bantu</span><span><i class="dashed"></i>Perpanjangan sinar</span></div>
           <div class="caption">Garis utuh menunjukkan lintasan sinar nyata. Ketika benda berada <strong>di dalam fokus</strong>, garis putus-putus adalah perpanjangan imajiner sinar pantul. Sinar ketiga menjadi sinar bantu jika lintasan menuju F berada di luar bidang diagram. Digunakan pendekatan paraksial.</div><div class="dimension-note">Pita ukur di bawah diagram: garis putus-putus abu-hijau menunjukkan <strong>besar jarak geometris</strong>. Nilai jarak bertanda tetap ditampilkan di panel hasil.</div>
         </div>
@@ -500,6 +512,8 @@ body {
     const X=x=>mirrorX+x*xScale,Y=y=>axisY-y*ys,p=(x,y)=>[X(x),Y(y)];
     const yTop=(axisY-20)/ys,yBot=-(plotH-axisY-20)/ys;
     geom={mirrorX,axisY,xScale,objectX:X(-s),objectY:Y(ho),left,right,w,h};
+    // Keep optical strokes within the upper diagram; ruler is reserved below.
+    ctx.save();ctx.beginPath();ctx.rect(0,0,w,plotH);ctx.clip();
     // Background aid: grid is optional and kept visually restrained.
     if(toggles.grid.checked){
       const step=Math.max(5,Math.round((left+right)/12/5)*5);
@@ -567,17 +581,16 @@ body {
       const imgX=X(-q.v),imgY=Y(q.hi),inFrame=imgX>17&&imgX<w-17;
       if(inFrame){
         path([[imgX,axisY],[imgX,imgY]],colors.image,4.5);
-        if(imgY>14&&imgY<h-14)arrow([[imgX,axisY],[imgX,imgY]],colors.image,4.5);
-        if(imgY>14&&imgY<h-14){
+        if(imgY>14&&imgY<plotH-14)arrow([[imgX,axisY],[imgX,imgY]],colors.image,4.5);
+        if(imgY>14&&imgY<plotH-14){
           dot(imgX,imgY,5,colors.image);
-          const labelY=q.real?Math.min(h-23,imgY+24):Math.max(20,imgY-25);
+          const labelY=q.real?Math.min(plotH-24,imgY+24):Math.max(20,imgY-25);
           txt(q.real?'BAYANGAN NYATA':'BAYANGAN MAYA',Math.min(w-80,Math.max(80,imgX)),labelY,{size:w<480?12:13,color:colors.image,weight:790,bg:true});
         }
       }
-    }else{
-      txt('BAYANGAN DI TAK HINGGA',w*.5,h-21,{size:12,color:'#3e7769',weight:750,bg:true});
-    }
+    } // At the focus the result panel reports s′ → ∞; no overlaid canvas label.
     const imageX=q.atFocus?NaN:X(-q.v);
+    ctx.restore(); // restore unclipped canvas before rendering reserved ruler band
     drawDistanceRuler(w,h,[
       {x1:objX,x2:mirrorX,label:'s = '+Math.round(s)+' cm'},
       {x1:mirrorX,x2:imageX,
