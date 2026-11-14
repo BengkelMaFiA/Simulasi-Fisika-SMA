@@ -313,6 +313,14 @@ body {
  .stat-label,.stat-foot{font-size:12px}
  .sim-note{font-size:13px;padding:0 12px 15px}
 }
+
+/* Distinct formula rows prevent the multiplication-dot ambiguity. */
+#formulaMain.formula-grid{display:grid;gap:0;padding:5px 14px;background:#f8faf7}
+.formula-line{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 2px;border-bottom:1px solid #dce8dd}
+.formula-line:last-child{border-bottom:0}
+.formula-meaning{font-family:"Segoe UI",system-ui,sans-serif;font-size:13px;line-height:1.55;color:#5b7367;font-weight:600}
+.formula-expression{font-family:Cambria,"Times New Roman",serif;font-size:clamp(18px,2vw,22px);line-height:1.4;font-weight:550;color:#285e52;white-space:nowrap}
+@media(max-width:570px){.formula-line{flex-wrap:wrap;gap:3px;padding:11px 2px}.formula-expression{font-size:21px}}
 </style>
 </head>
 <body>
@@ -561,7 +569,7 @@ body {
    put('conceptBody','Sudut datang dan sudut pantul selalu sama besar jika diukur dari garis normal yang tegak lurus cermin pada titik tumbukan. Sinar datang, sinar pantul, dan garis normal terletak pada bidang yang sama. Hukum ini berlaku pada pemantulan ideal.');
    put('insightText',state.angle===0?'Pada sudut datang 0°, cahaya datang tegak lurus dan dipantulkan kembali pada jalur yang sama.':'Jika sudut datang '+state.angle+'°, sudut pantul juga '+state.angle+'°. Sudut terhadap bidang cermin adalah '+(90-state.angle)+'°.');
    put('formulaTitle','Hukum pemantulan');
-   put('formulaMain','θᵢ = θᵣ');
+   put('formulaMain','θᵢ = θᵣ');$('formulaMain').classList.remove('formula-grid');
    put('formulaNote','Kedua sudut diukur dari garis normal, bukan dari permukaan cermin.');
    put('formulaExplanation','Sudut terhadap permukaan = 90° − θ terhadap normal. Cermin datar ideal memantulkan sinar secara teratur; arah pantul mengikuti hukum pemantulan.');
   }else{
@@ -577,10 +585,14 @@ body {
    put('chipA','Maya');put('chipB','Tegak');put('chipC','Sama besar');
    put('conceptBody','Sinar pantul menyebar seolah-olah datang dari suatu titik di belakang cermin. Perpanjangan sinar-sinar pantul bertemu di lokasi bayangan maya. Jarak bayangan ke cermin sama dengan jarak benda ke cermin. Tingginya sama dan orientasinya tegak; cermin tidak membuat cahaya benar-benar merambat ke belakangnya.');
    put('insightText','Benda '+format(state.s)+' cm di depan cermin menghasilkan bayangan maya '+format(state.s)+' cm di belakang cermin. Tinggi keduanya '+format(state.h)+' cm.');
-   put('formulaTitle','Hubungan cermin datar');
-   put('formulaMain',"s′ = −s    ·    M = +1    ·    h′ = h");
-   put('formulaNote','Konvensi tanda: s positif di depan cermin, s′ negatif untuk bayangan maya di belakang cermin.');
-   put('formulaExplanation','Bayangan maya tidak dapat ditangkap pada layar. Cermin datar tidak memperbesar atau memperkecil benda. Secara geometris, yang terbalik adalah arah tegak lurus permukaan cermin (depan–belakang), bukan kiri dan kanan secara langsung.');
+   put('formulaTitle','Hubungan cermin datar');$('formulaMain').classList.add('formula-grid');
+   $('formulaMain').innerHTML =
+    '<div class="formula-line"><span class="formula-meaning">Jarak bayangan bertanda</span><span class="formula-expression">s′ = −s</span></div>' +
+    '<div class="formula-line"><span class="formula-meaning">Besar jarak bayangan</span><span class="formula-expression">|s′| = s</span></div>' +
+    '<div class="formula-line"><span class="formula-meaning">Perbesaran linear</span><span class="formula-expression">M = h′/h = +1</span></div>' +
+    '<div class="formula-line"><span class="formula-meaning">Tinggi bayangan</span><span class="formula-expression">h′ = h</span></div>';
+   put('formulaNote','Dengan s = '+format(state.s)+' cm dan h = '+format(state.h)+' cm: s′ = −'+format(state.s)+' cm, M = +1 (tanpa satuan), dan h′ = '+format(state.h)+' cm.');
+   put('formulaExplanation','Tanda negatif pada s′ menunjukkan lokasi bayangan di belakang cermin, bukan jarak fisik yang negatif. Perbesaran M tidak memiliki satuan. Bayangan maya tidak dapat ditangkap pada layar. Secara geometris, yang terbalik adalah arah tegak lurus permukaan cermin (depan–belakang), bukan kiri dan kanan secara langsung.');
   }
   document.querySelectorAll('[data-angle]').forEach(b=>b.classList.toggle('active',+b.dataset.angle===state.angle));
   document.querySelectorAll('[data-distance]').forEach(b=>b.classList.toggle('active',+b.dataset.distance===state.s));
