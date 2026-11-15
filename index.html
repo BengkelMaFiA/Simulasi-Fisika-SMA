@@ -213,10 +213,18 @@ a:focus-visible {
 footer a { color: var(--sage-deep); font-weight: 690; text-underline-offset: 3px; }
 footer a:hover { color: var(--sage); }
 @media (max-width: 640px) { .card + .card { margin-top: 16px; } }
+
+footer{display:flex;justify-content:space-between;align-items:center;gap:12px 24px;flex-wrap:wrap}
+
+/* Social links: matching, legible footers on desktop and mobile. */
+.social-links{display:inline-flex;align-items:center;gap:10px 22px;flex-wrap:wrap}
+.social-links a{font-size:13px;line-height:1.6;font-weight:700;text-underline-offset:3px;overflow-wrap:anywhere}
+@media(max-width:570px){.social-links{width:100%;gap:8px 18px}}
+
 </style></head><body><div class="wrap"><header><div class="brand">BengkelMaFiA <span aria-hidden="true">✦</span></div><div class="tag">Laboratorium Fisika SMA</div></header>
 <main><div class="kicker">Belajar fisika melalui eksplorasi</div><h1>Fisika lebih jelas ketika <span>dicoba sendiri.</span></h1>
 <p>Kumpulan simulasi interaktif untuk membantu siswa memahami konsep melalui eksperimen virtual, visualisasi, dan perhitungan yang dapat diuji secara langsung.</p>
 <a class="card" href="cermin-datar/"><div class="eyebrow">01 · OPTIKA GEOMETRIS</div><h2>Cermin Datar</h2><p>Uji hukum pemantulan dengan mengubah sudut datang dan sudut pantul. Selidiki pula bayangan maya yang tegak, sama besar, dan simetris di belakang cermin.</p><div class="go">Buka simulasi →</div></a>
 <a class="card" href="cermin-cekung/"><div class="eyebrow">02 · OPTIKA GEOMETRIS</div><h2>Cermin Cekung</h2><p>Geser benda melintasi titik fokus dan pusat kelengkungan. Bandingkan bayangan nyata, maya, tegak, terbalik, diperbesar, dan diperkecil.</p><div class="go">Buka simulasi →</div></a>
 <a class="card" href="cermin-cembung/"><div class="eyebrow">03 · OPTIKA GEOMETRIS</div><h2>Cermin Cembung</h2><p>Geser benda, ubah fokus cermin, dan amati tiga sinar utama, bayangan maya, serta hubungan jarak benda, jarak bayangan, dan perbesaran.</p><div class="go">Buka simulasi →</div></a></main>
-<footer>© BengkelMaFiA · Materi pembelajaran fisika tingkat SMA · YouTube: <a href="https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA" target="_blank" rel="noopener noreferrer">Channel BengkelMaFiA</a></footer></div></body></html>
+<footer>© BengkelMaFiA · Materi pembelajaran fisika tingkat SMA <span class="social-links"><a href="https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA" target="_blank" rel="noopener noreferrer" aria-label="YouTube BengkelMaFiA">YouTube BengkelMaFiA ↗</a><a href="https://www.instagram.com/animatematika?vrfl=MTc5ZnBheG8wOHJqcw==" target="_blank" rel="noopener noreferrer" aria-label="Instagram animatematika">Instagram @animatematika ↗</a></span></footer></div></body></html>
