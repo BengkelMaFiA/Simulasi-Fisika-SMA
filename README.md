@@ -25,7 +25,7 @@ Laboratorium virtual berbasis HTML, CSS, dan JavaScript yang dapat dibuka melalu
 - Bayangan senantiasa **maya, tegak, diperkecil** untuk benda nyata di depan cermin.
 - Konvensi: `f < 0`, `s′ < 0`, dan `0 < M < 1`.
 
-Semua halaman simulasi memiliki tautan kembali ke [halaman utama](index.html) dan tautan ke [kanal YouTube BengkelMaFiA](https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA).
+Semua halaman simulasi memiliki tautan kembali ke [halaman utama](index.html), tautan ke [kanal YouTube BengkelMaFiA](https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA), serta [Instagram @animatematika](https://www.instagram.com/animatematika?vrfl=MTc5ZnBheG8wOHJqcw==).
 
 ## Membuka simulasi
 
