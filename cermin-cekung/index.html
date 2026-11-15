@@ -302,6 +302,11 @@ body {
 @media(max-width:570px){
   .diagram-help{margin:10px 10px 0;padding:9px 11px;font-size:12.5px}
 }
+
+/* Social links: matching, legible footers on desktop and mobile. */
+.social-links{display:inline-flex;align-items:center;gap:10px 22px;flex-wrap:wrap}
+.social-links a{font-size:13px;line-height:1.6;font-weight:700;text-underline-offset:3px;overflow-wrap:anywhere}
+@media(max-width:570px){.social-links{width:100%;gap:8px 18px}}
 </style>
 </head>
 <body>
@@ -352,7 +357,7 @@ body {
         <article class="panel info-box"><h2 class="h2">Persamaan cermin</h2><div class="math" aria-label="Satu per f sama dengan satu per s ditambah satu per s aksen">1/f = 1/s + 1/s′</div><div class="math" aria-label="Perbesaran sama dengan negatif s aksen dibagi s sama dengan h aksen dibagi h">M = −s′/s = h′/h</div><div class="math-note">Konvensi tanda: benda nyata s &gt; 0; cermin cekung f &gt; 0; bayangan nyata s′ &gt; 0, sedangkan bayangan maya s′ &lt; 0. Perbesaran M negatif untuk bayangan terbalik dan positif untuk bayangan tegak. <span id="formulaStep"></span></div></article>
       </section>
     </main>
-    <footer class="footer"><span>© BengkelMaFiA · Laboratorium Optika SMA</span><span>Dibuat untuk belajar dan bereksperimen · Berjalan secara offline</span><span>YouTube: <a href="https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA" target="_blank" rel="noopener noreferrer">Channel BengkelMaFiA ↗</a></span></footer>
+    <footer class="footer"><span>© BengkelMaFiA · Laboratorium Optika SMA</span><span>Dibuat untuk belajar dan bereksperimen · Berjalan secara offline</span><span class="social-links"><a href="https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA" target="_blank" rel="noopener noreferrer" aria-label="YouTube BengkelMaFiA">YouTube BengkelMaFiA ↗</a><a href="https://www.instagram.com/animatematika?vrfl=MTc5ZnBheG8wOHJqcw==" target="_blank" rel="noopener noreferrer" aria-label="Instagram animatematika">Instagram @animatematika ↗</a></span></footer>
   </div>
   <script>
 (() => {
