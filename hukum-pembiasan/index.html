@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f8f3">
+  <meta name="description" content="Laboratorium virtual hukum pembiasan cahaya (Hukum Snellius): ubah sudut datang dan indeks bias medium untuk mengamati pembelokan sinar, sudut kritis, dan pemantulan sempurna.">
+  <title>Hukum Pembiasan • Laboratorium Optika | BengkelMaFiA</title>
+  <style>
+:root {
+  color-scheme: light;
+  --bg:#f7f8f3;
+  --bg2:#f1f5ee;
+  --panel:#ffffff;
+  --panel2:#f8faf7;
+  --line:#dce5dd;
+  --fg:#273a36;
+  --muted:#64756e;
+  --aqua:#35796e;
+  --amber:#ad6f39;
+  --pink:#9873ad;
+  --blue:#4d77a2;
+  --green:#39836f;
+  --white:#ffffff;
+  --shadow:0 3px 12px rgba(35,65,52,.025),0 16px 44px rgba(35,65,52,.045);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--fg);
+  font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+  font-size:16px;line-height:1.7;
+  background:radial-gradient(ellipse 64% 36% at 97% 0%,rgba(190,216,194,.32),transparent 87%),
+    radial-gradient(ellipse 38% 32% at 4% 100%,rgba(230,219,196,.19),transparent 88%),var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,canvas:focus-visible,a:focus-visible{outline:3px solid #277b6e;outline-offset:4px}
+.shell{max-width:1400px;margin:auto;padding:25px clamp(17px,3.5vw,48px) 42px}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin-bottom:clamp(33px,4.5vw,58px);padding-bottom:22px;border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:11px;font-size:15px;letter-spacing:.025em;font-weight:780;text-transform:uppercase;color:#2d5148}
+.logo{
+  display:grid;place-items:center;height:38px;width:38px;border-radius:11px;
+  background:linear-gradient(140deg,#3d8276,#608e7b);color:#fff;
+  font-size:20px;font-weight:850;box-shadow:0 6px 16px rgba(48,106,85,.14);
+}
+.nav-links{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.back-link{
+  display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:#397465;
+  background:#eff6ef;border:1px solid #d7e7d8;padding:9px 13px;border-radius:11px;
+  font-size:13px;font-weight:720;min-height:42px;transition:background .2s;
+}
+.back-link:hover{background:#e1f0e4}
+.topic{
+  font-size:13px;color:#54766b;border:1px solid #d2e3d8;
+  padding:8px 14px;border-radius:999px;background:#ffffffba;font-weight:600;letter-spacing:.025em;
+}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:28px}
+.eyebrow{
+  color:var(--aqua);font-size:13px;letter-spacing:.13em;font-weight:780;
+  text-transform:uppercase;margin-bottom:12px;
+}
+h1{font-size:clamp(32px,3.9vw,54px);letter-spacing:-.048em;line-height:1.12;margin:0 0 14px;font-weight:750;text-wrap:balance}
+h1 span{color:var(--aqua)}
+.lead{font-size:clamp(15px,1.5vw,17px);max-width:740px;color:var(--muted);line-height:1.8;margin:0}
+.status{
+  display:flex;align-items:center;gap:10px;flex:none;padding:10px 14px;border-radius:11px;
+  border:1px solid #cee3d3;background:#edf7ef;color:#386d54;font-size:13px;font-weight:770;letter-spacing:.03em;
+}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#4b9971;box-shadow:0 0 0 4px #85c3a831}
+.workspace{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(295px,.82fr);gap:18px;align-items:stretch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.diagram-panel{overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:19px 20px 15px}
+.panel-title{display:flex;align-items:center;gap:9px;font-size:16px;line-height:1.5;font-weight:740;letter-spacing:-.012em;color:#2c453e}
+.tiny-symbol{width:28px;height:28px;border-radius:9px;background:#edf4ee;color:#477e69;display:grid;place-items:center;font-size:14px}
+.small-actions{display:flex;gap:7px;flex-wrap:wrap}
+.ghost-btn{
+  display:inline-flex;align-items:center;gap:6px;min-height:43px;padding:10px 13px;
+  border-radius:10px;border:1px solid #dbe5de;background:#f9fbf9;color:#45615a;
+  font-size:14px;font-weight:710;transition:background .2s,border-color .2s,transform .2s;
+}
+.ghost-btn:hover{border-color:#9abdae;background:#eff6f0;transform:translateY(-1px)}
+.ghost-btn[aria-pressed="true"]{background:#e1efe6;color:#236c59;border-color:#9fc4ae}
+.canvas-wrap{
+  margin:0 14px 4px;border:1px solid #dce6de;border-radius:14px;
+  overflow:hidden;position:relative;background:#fbfcf9;
+}
+canvas{width:100%;height:auto;aspect-ratio:1.76;min-height:360px;display:block;touch-action:pan-y;cursor:default}
+.diagram-help{
+  display:flex;align-items:center;min-height:38px;
+  margin:11px 18px 0;padding:8px 12px;
+  border:1px solid #e1e9e2;border-radius:10px;
+  background:#f8faf7;color:#4f7165;
+  font:600 13px/1.55 "Segoe UI",system-ui,sans-serif;
+}
+.legend{display:flex;gap:12px 23px;flex-wrap:wrap;padding:14px 20px 12px;font-size:14px;line-height:1.6;color:#526960}
+.legend i{display:inline-block;width:23px;height:3px;vertical-align:middle;margin-right:7px;border-radius:4px}
+.legend .dashed{border-top:2px dashed #876da7;height:0}
+.caption{padding:0 20px 18px;color:#708078;font-size:14px;line-height:1.8}
+.control-panel{padding:20px 20px 22px;display:flex;flex-direction:column;gap:20px}
+.control-intro{font-size:14px;color:var(--muted);line-height:1.75;margin:6px 0 0}
+.field{display:block;min-width:0}
+.field-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
+.field-name{font-size:15px;line-height:1.5;font-weight:700;color:#334c43}
+.field-name small{display:block;font-size:13px;line-height:1.5;font-weight:430;color:#77877e;margin-top:4px}
+.value{color:#256c60;font-size:16px;line-height:1.4;font-weight:780;font-variant-numeric:tabular-nums;white-space:nowrap}
+.track{width:100%;accent-color:#3d8174;cursor:pointer;height:14px}
+.track::-webkit-slider-runnable-track{border-radius:100px}
+.track::-webkit-slider-thumb{cursor:grab}
+.track:active::-webkit-slider-thumb{cursor:grabbing}
+.range-end{display:flex;justify-content:space-between;color:#7b8d82;font-size:12px;line-height:1.5;margin-top:7px}
+.swap-row{display:flex;justify-content:flex-end;margin-top:-6px}
+.swap-btn{
+  display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:7px 12px;
+  border-radius:10px;border:1px solid #d9e7dc;background:#f6faf6;color:#3b695b;
+  font-size:13px;font-weight:720;transition:background .2s,border-color .2s;
+}
+.swap-btn:hover{background:#e8f3ea;border-color:#9fc4ae}
+.divider{border:0;border-top:1px solid #e4ebe5;margin:0}
+.switch-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.switch-title{font-size:14px;line-height:1.5;font-weight:720;color:#38544b}
+.switch-sub{font-size:13px;line-height:1.6;color:#7a8b81;margin-top:3px}
+.switch{position:relative;width:43px;height:25px;flex:none}
+.switch input{position:absolute;opacity:0}
+.switch span{display:block;background:#b8c8bd;width:43px;height:25px;border-radius:99px;transition:.2s}
+.switch span:after{content:"";position:absolute;top:3px;left:3px;background:white;width:19px;height:19px;border-radius:50%;transition:.2s;box-shadow:0 1px 3px #1b3d2920}
+.switch input:checked+span{background:#498877}
+.switch input:checked+span:after{transform:translateX(18px)}
+.switch input:focus-visible+span{outline:3px solid #348478;outline-offset:4px}
+.preset-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pill{
+  min-height:43px;font-size:13.5px;line-height:1.35;font-weight:750;color:#45685c;
+  background:#f6faf6;border:1px solid #d9e7dc;padding:9px 10px;border-radius:10px;
+  transition:background .2s,border-color .2s;
+}
+.pill:hover{border-color:#8ebba5;background:#edf6ee}
+.pill.active{color:#216b57;border-color:#8fbba4;background:#e0f0e5}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-top:17px}
+.stat{
+  padding:17px 19px 18px;border:1px solid #dfe7df;border-radius:15px;
+  background:#fff;min-width:0;box-shadow:0 4px 15px #39574409;
+}
+.stat-label{font-size:13px;line-height:1.5;color:#677e71;margin-bottom:8px}
+.stat-value{font-size:clamp(22px,2.2vw,30px);font-weight:760;letter-spacing:-.035em;font-variant-numeric:tabular-nums;white-space:nowrap;color:#30443c}
+.stat-value small{font-size:14px;font-weight:600;color:#7b9386}
+.stat-foot{font-size:13px;line-height:1.55;color:#718679;margin-top:8px}
+.stat.image .stat-value{color:#277767}
+.stat.magnification .stat-value{color:#a46c3e}
+.stat:last-child .stat-value{font-size:clamp(18px,1.7vw,22px);white-space:normal;line-height:1.25;color:#476f88}
+.lower{display:grid;grid-template-columns:1.05fr .95fr;gap:17px;margin-top:17px}
+.info-box{padding:23px 25px}
+.h2{margin:0 0 14px;font-size:19px;line-height:1.45;font-weight:760;color:#304b41;letter-spacing:-.02em}
+.properties{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+.chip{color:#36745f;border:1px solid #d4e7d8;border-radius:999px;background:#eef7ee;padding:7px 13px;font-size:13px;line-height:1.5;font-weight:750}
+.chip.warn{color:#9a5b29;border-color:#ead5be;background:#fbf3ea}
+.body-copy{font-size:15px;color:#61736a;line-height:1.85;margin:0}
+.math{
+  font-family:Cambria,"Times New Roman",serif;font-size:23px;line-height:1.55;color:#30483e;
+  letter-spacing:.01em;padding:13px 16px;background:#f5f8f3;
+  border:1px solid #e1e9de;border-radius:11px;margin:10px 0;
+}
+.math-note{color:#687c6e;font-size:14px;line-height:1.8}
+.insight{
+  display:flex;gap:11px;align-items:flex-start;padding:14px 15px;
+  border:1px solid #d8e7dc;background:#f0f7f1;border-radius:11px;margin-top:15px;
+  font-size:14px;line-height:1.8;color:#426555;
+}
+.sparkle{color:#b88756;font-size:18px;flex:none}
+.footer{
+  margin-top:31px;border-top:1px solid var(--line);padding-top:19px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  color:#84958b;font-size:13px;line-height:1.7;
+}
+.footer a{color:#326f61;text-underline-offset:3px;font-weight:700}
+.footer a:hover{color:#205344}
+.social-links{display:inline-flex;align-items:center;gap:10px 22px;flex-wrap:wrap}
+.social-links a{font-size:13px;line-height:1.6;font-weight:700;text-underline-offset:3px;overflow-wrap:anywhere}
+@media(max-width:900px){
+  .workspace{grid-template-columns:1fr;align-items:start}
+  .control-panel{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .control-panel>.full{grid-column:1/-1}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lower{grid-template-columns:1fr 1fr}
+}
+@media(max-width:570px){
+  .shell{padding:17px 12px 31px}
+  .topbar{margin-bottom:28px;gap:12px;flex-wrap:wrap;padding-bottom:18px}
+  .brand{font-size:14px}
+  .nav-links{width:100%;justify-content:space-between}
+  .back-link{font-size:13px}
+  .topic{font-size:12px}
+  .status{display:none}
+  header{margin-bottom:22px}
+  .eyebrow{font-size:12px}
+  h1{letter-spacing:-.045em}
+  .lead{font-size:15px}
+  .panel{border-radius:15px}
+  .panel-head{padding:14px 12px 12px;align-items:flex-start;flex-wrap:wrap;gap:12px}
+  .panel-title{font-size:15px}
+  .small-actions{justify-content:flex-start;width:100%}
+  .ghost-btn{font-size:13px;padding:9px 11px;min-height:42px}
+  .canvas-wrap{margin:0 8px}
+  canvas{aspect-ratio:1.23;min-height:360px}
+  .diagram-help{margin:10px 10px 0;padding:9px 11px;font-size:12.5px}
+  .legend{gap:10px 14px;padding:13px 12px;font-size:13px}
+  .caption{padding:0 12px 15px;font-size:13.5px}
+  .control-panel{grid-template-columns:1fr;gap:19px;padding:17px}
+  .control-panel>.full{grid-column:auto}
+  .field-row{flex-wrap:wrap}
+  .stats{gap:9px}
+  .stat{padding:13px}
+  .stat-label{font-size:12.5px}
+  .stat-value{font-size:22px}
+  .stat-foot{font-size:12px}
+  .stat:last-child .stat-value{font-size:18px}
+  .lower{grid-template-columns:1fr}
+  .info-box{padding:21px}
+  .math{font-size:21px}
+  .footer{font-size:12.5px}
+  .social-links{width:100%;gap:8px 18px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="topbar" aria-label="Navigasi utama">
+      <div class="brand"><span class="logo" aria-hidden="true">B</span> BengkelMaFiA <span style="color:#7d9487;font-weight:400">/ LAB</span></div>
+      <div class="nav-links">
+        <a class="back-link" href="../" aria-label="Kembali ke halaman utama">← Halaman utama</a>
+        <div class="topic">FISIKA SMA · OPTIKA GEOMETRIS</div>
+      </div>
+    </nav>
+
+    <header>
+      <div>
+        <div class="eyebrow">Laboratorium Virtual 04</div>
+        <h1>Menjelajahi <span>Hukum Pembiasan</span></h1>
+        <p class="lead">Ubah sudut datang dan indeks bias kedua medium, lalu amati bagaimana arah sinar berbelok di bidang batas—termasuk saat mencapai sudut kritis dan pemantulan sempurna.</p>
+      </div>
+      <div class="status"><span class="status-dot"></span> SIMULASI AKTIF</div>
+    </header>
+
+    <main>
+      <section class="workspace" aria-label="Laboratorium interaktif hukum pembiasan">
+        <div class="panel diagram-panel">
+          <div class="panel-head">
+            <div class="panel-title"><span class="tiny-symbol">◉</span> Diagram pembiasan cahaya</div>
+            <div class="small-actions">
+              <button id="animateBtn" class="ghost-btn" title="Gerakkan sudut datang secara otomatis" aria-pressed="false">▶ Otomatis</button>
+              <button id="resetBtn" class="ghost-btn" title="Kembalikan pengaturan awal">↺ Reset</button>
+              <button id="saveBtn" class="ghost-btn" title="Simpan diagram sebagai gambar PNG">↓ PNG</button>
+            </div>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="scene" role="img" tabindex="0" aria-label="Diagram interaktif hukum pembiasan: sinar datang dari medium 1 mengenai bidang batas dan dibiaskan ke medium 2 sesuai hukum Snellius, atau dipantulkan sempurna bila melebihi sudut kritis."></canvas>
+          </div>
+          <div class="diagram-help">↔ Seret ujung sinar datang pada diagram atau gunakan slider</div>
+          <div class="legend" aria-label="Keterangan warna sinar">
+            <span><i style="background:#b77c3f"></i>Sinar datang</span>
+            <span><i style="background:#2a8679"></i>Sinar bias</span>
+            <span><i style="background:#567cab"></i>Sinar pantul</span>
+            <span><i class="dashed"></i>Garis normal</span>
+          </div>
+          <div class="caption">Sudut datang <strong>θ₁</strong> dan sudut bias <strong>θ₂</strong> selalu diukur dari <strong>garis normal</strong> (tegak lurus bidang batas). Warna medium yang lebih gelap menandakan indeks bias yang lebih besar.</div>
+        </div>
+
+        <aside class="panel control-panel" aria-label="Pengaturan simulasi">
+          <div class="full">
+            <div class="panel-title"><span class="tiny-symbol">⚙</span> Panel eksperimen</div>
+            <p class="control-intro">Atur sudut datang dan indeks bias medium untuk menguji Hukum Snellius.</p>
+          </div>
+
+          <div class="field full">
+            <div class="field-row">
+              <label class="field-name" for="angle">Sudut datang <small>θ₁ · diukur dari garis normal</small></label>
+              <output id="angleVal" class="value" for="angle">40°</output>
+            </div>
+            <input class="track" id="angle" type="range" min="0" max="85" step="1" value="40">
+            <div class="range-end"><span>0° · tegak lurus</span><span>85°</span></div>
+          </div>
+
+          <div class="field">
+            <div class="field-row">
+              <label class="field-name" for="n1">Medium 1 <small>n₁ · medium asal sinar</small></label>
+              <output id="n1Val" class="value" for="n1">1,00 · Udara</output>
+            </div>
+            <input class="track" id="n1" type="range" min="1.00" max="2.42" step="0.01" value="1.00">
+            <div class="range-end"><span>1,00 (Udara)</span><span>2,42 (Intan)</span></div>
+          </div>
+
+          <div class="field">
+            <div class="field-row">
+              <label class="field-name" for="n2">Medium 2 <small>n₂ · medium tujuan sinar</small></label>
+              <output id="n2Val" class="value" for="n2">1,33 · Air</output>
+            </div>
+            <input class="track" id="n2" type="range" min="1.00" max="2.42" step="0.01" value="1.33">
+            <div class="range-end"><span>1,00 (Udara)</span><span>2,42 (Intan)</span></div>
+          </div>
+
+          <div class="full swap-row">
+            <button id="swapBtn" type="button" class="swap-btn" title="Tukar indeks bias medium 1 dan medium 2">⇄ Tukar medium 1 &amp; 2</button>
+          </div>
+
+          <div class="full"><hr class="divider"></div>
+
+          <div class="switch-row">
+            <div><div class="switch-title">Garis normal</div><div class="switch-sub">Acuan pengukuran sudut θ₁ dan θ₂</div></div>
+            <label class="switch"><input id="showNormal" type="checkbox" checked aria-label="Tampilkan garis normal"><span></span></label>
+          </div>
+
+          <div class="switch-row">
+            <div><div class="switch-title">Busur sudut &amp; θc</div><div class="switch-sub">Tandai sudut datang, bias, dan batas kritis</div></div>
+            <label class="switch"><input id="showAngles" type="checkbox" checked aria-label="Tampilkan busur sudut"><span></span></label>
+          </div>
+
+          <div class="switch-row full">
+            <div><div class="switch-title">Sinar pantul sebagian</div><div class="switch-sub">Sebagian kecil cahaya memantul di bidang batas</div></div>
+            <label class="switch"><input id="showReflected" type="checkbox" checked aria-label="Tampilkan sinar pantul sebagian"><span></span></label>
+          </div>
+
+          <div class="full"><hr class="divider"></div>
+
+          <div class="full">
+            <div class="field-name" style="margin-bottom:10px">Coba skenario</div>
+            <div class="preset-row">
+              <button type="button" class="pill" data-preset="air-water">Udara → Air</button>
+              <button type="button" class="pill" data-preset="air-glass">Udara → Kaca</button>
+              <button type="button" class="pill" data-preset="water-air">Air → Udara</button>
+              <button type="button" class="pill" data-preset="tir">Pantul sempurna</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="stats" aria-label="Hasil perhitungan">
+        <div class="stat">
+          <div class="stat-label">Sudut datang · θ₁</div>
+          <div class="stat-value" id="statIncident">40°</div>
+          <div class="stat-foot" id="footIncident">Diukur dari garis normal</div>
+        </div>
+        <div class="stat image">
+          <div class="stat-label">Sudut bias · θ₂</div>
+          <div class="stat-value" id="statRefracted">28,9°</div>
+          <div class="stat-foot" id="footRefracted">Lebih kecil dari θ₁</div>
+        </div>
+        <div class="stat magnification">
+          <div class="stat-label">Sudut kritis · θc</div>
+          <div class="stat-value" id="statCritical">—</div>
+          <div class="stat-foot" id="footCritical">Hanya ada jika n₁ &gt; n₂</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Arah sinar</div>
+          <div class="stat-value" id="statBehavior">Mendekati normal</div>
+          <div class="stat-foot" id="footBehavior">n₁ &lt; n₂ · cahaya melambat</div>
+        </div>
+      </section>
+
+      <section class="lower" aria-label="Konsep fisika">
+        <article class="panel info-box">
+          <h2 class="h2">Apa yang sedang terjadi?</h2>
+          <div class="properties">
+            <span class="chip" id="chipA">n₁ &lt; n₂</span>
+            <span class="chip" id="chipB">Mendekati normal</span>
+            <span class="chip" id="chipC">Dibiaskan</span>
+          </div>
+          <p class="body-copy">Pembiasan terjadi karena <strong>cepat rambat cahaya berubah</strong> saat memasuki medium dengan indeks bias berbeda. Dari medium kurang rapat ke lebih rapat (n₁ &lt; n₂), sinar berbelok <strong>mendekati garis normal</strong>. Sebaliknya (n₁ &gt; n₂), sinar berbelok <strong>menjauhi garis normal</strong>, dan jika θ₁ melebihi sudut kritis θc seluruh cahaya mengalami <strong>pemantulan sempurna</strong>.</p>
+          <div class="insight">
+            <span class="sparkle">✦</span>
+            <span id="insightText" aria-live="polite">Dari udara ke air dengan sudut datang 40°, sinar dibiaskan mendekati garis normal menjadi 28,9°.</span>
+          </div>
+        </article>
+
+        <article class="panel info-box">
+          <h2 class="h2">Hukum Snellius</h2>
+          <div class="math" aria-label="n satu sinus teta satu sama dengan n dua sinus teta dua">n₁ sin θ₁ = n₂ sin θ₂</div>
+          <div class="math" aria-label="sinus teta kritis sama dengan n dua dibagi n satu untuk n satu lebih besar dari n dua">sin θc = n₂ / n₁ &nbsp;<span style="font-size:16px;color:#687c6e">(jika n₁ &gt; n₂)</span></div>
+          <div class="math-note">
+            <span id="formulaStep"></span>
+            Model berlaku untuk cahaya monokromatik pada bidang batas datar yang halus.
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© BengkelMaFiA · Laboratorium Optika SMA</span>
+      <span>Dibuat untuk belajar dan bereksperimen · Berjalan secara offline</span>
+      <span class="social-links">
+        <a href="https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA" target="_blank" rel="noopener noreferrer" aria-label="YouTube BengkelMaFiA">YouTube BengkelMaFiA ↗</a>
+        <a href="https://www.instagram.com/animatematika?vrfl=MTc5ZnBheG8wOHJqcw==" target="_blank" rel="noopener noreferrer" aria-label="Instagram animatematika">Instagram @animatematika ↗</a>
+      </span>
+    </footer>
+  </div>
+
+  <script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const cvs = $('scene'), ctx = cvs.getContext('2d');
+
+  const controls = {
+    angle: $('angle'),
+    n1: $('n1'),
+    n2: $('n2'),
+    showNormal: $('showNormal'),
+    showAngles: $('showAngles'),
+    showReflected: $('showReflected')
+  };
+
+  const C = {
+    incident: '#b77c3f',
+    refracted: '#2a8679',
+    reflected: '#567cab',
+    normal: '#876da7',
+    critical: '#b36b4c',
+    border: '#5e877c'
+  };
+
+  const PRESETS = {
+    'air-water': { theta1: 40, n1: 1.00, n2: 1.33 },
+    'air-glass': { theta1: 45, n1: 1.00, n2: 1.50 },
+    'water-air': { theta1: 35, n1: 1.33, n2: 1.00 },
+    'tir':       { theta1: 50, n1: 1.50, n2: 1.00 }
+  };
+
+  const MATERIALS = [
+    { n: 1.00, name: 'Udara' },
+    { n: 1.31, name: 'Es' },
+    { n: 1.33, name: 'Air' },
+    { n: 1.36, name: 'Etanol' },
+    { n: 1.47, name: 'Minyak' },
+    { n: 1.50, name: 'Kaca' },
+    { n: 1.52, name: 'Kaca' },
+    { n: 2.42, name: 'Intan' }
+  ];
+
+  const base = { theta1: 40, n1: 1.00, n2: 1.33 };
+  let state = { ...base };
+  let playing = false, lastTs = 0, phase = 0, dragging = false;
+  let dimensions = { w: 800, h: 454, dpr: 1 };
+  let geom = null;
+
+  const fmt = (v, d = 1) => Number(v).toLocaleString('id-ID', {
+    minimumFractionDigits: d,
+    maximumFractionDigits: d
+  });
+
+  function materialName(n) {
+    for (const m of MATERIALS) {
+      if (Math.abs(n - m.n) < 0.005) return m.name;
+    }
+    return '';
+  }
+
+  function formatMedium(n) {
+    const label = materialName(n);
+    return label ? `${fmt(n, 2)} · ${label}` : fmt(n, 2);
+  }
+
+  function mediumTint(n) {
+    const t = Math.max(0, Math.min(1, (n - 1.00) / 1.42));
+    const alpha = Math.pow(t, 0.72) * 0.30;
+    return `rgba(74, 134, 146, ${alpha.toFixed(3)})`;
+  }
+
+  function calcPhysics() {
+    const { theta1, n1, n2 } = state;
+    const rad1 = theta1 * Math.PI / 180;
+    const sin1 = Math.sin(rad1);
+    const cos1 = Math.cos(rad1);
+    const sameMedium = Math.abs(n1 - n2) < 1e-9;
+    const hasCritical = n1 > n2 + 1e-9;
+    const thetaC = hasCritical ? Math.asin(n2 / n1) * 180 / Math.PI : null;
+    const sin2Raw = (n1 / n2) * sin1;
+
+    if (sameMedium) {
+      return {
+        theta1, rad1, n1, n2, sin2Raw,
+        sameMedium: true, hasCritical: false, thetaC: null,
+        tir: false, atCritical: false,
+        theta2: theta1, rad2: rad1,
+        reflectance: 0
+      };
+    }
+
+    if (sin2Raw > 1 + 1e-6) {
+      return {
+        theta1, rad1, n1, n2, sin2Raw,
+        sameMedium: false, hasCritical, thetaC,
+        tir: true, atCritical: false,
+        theta2: null, rad2: null,
+        reflectance: 1
+      };
+    }
+
+    if (Math.abs(sin2Raw - 1) <= 1e-6) {
+      return {
+        theta1, rad1, n1, n2, sin2Raw: 1,
+        sameMedium: false, hasCritical, thetaC,
+        tir: false, atCritical: true,
+        theta2: 90, rad2: Math.PI / 2,
+        reflectance: 1
+      };
+    }
+
+    const rad2 = Math.asin(Math.max(0, Math.min(1, sin2Raw)));
+    const theta2 = rad2 * 180 / Math.PI;
+    const cos2 = Math.cos(rad2);
+    const rs = (n1 * cos1 - n2 * cos2) / (n1 * cos1 + n2 * cos2);
+    const rp = (n1 * cos2 - n2 * cos1) / (n1 * cos2 + n2 * cos1);
+    const reflectance = 0.5 * (rs * rs + rp * rp);
+
+    return {
+      theta1, rad1, n1, n2, sin2Raw,
+      sameMedium: false, hasCritical, thetaC,
+      tir: false, atCritical: false,
+      theta2, rad2,
+      reflectance
+    };
+  }
+
+  function line(points, color, width = 2, dash = [], alpha = 1) {
+    if (points.length < 2) return;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.lineCap = 'round';
+    ctx.setLineDash(dash);
+    ctx.beginPath();
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function arrow(points, color, width = 3.2, alpha = 1) {
+    line(points, color, width, [], alpha);
+    const a = points[points.length - 2], b = points[points.length - 1];
+    const dir = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    const headLen = 11;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(b[0], b[1]);
+    ctx.lineTo(b[0] - headLen * Math.cos(dir - 0.48), b[1] - headLen * Math.sin(dir - 0.48));
+    ctx.lineTo(b[0] - headLen * Math.cos(dir + 0.48), b[1] - headLen * Math.sin(dir + 0.48));
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function midArrow(a, b, color, width = 3.2, alpha = 1) {
+    line([a, b], color, width, [], alpha);
+    const mx = a[0] + (b[0] - a[0]) * 0.56;
+    const my = a[1] + (b[1] - a[1]) * 0.56;
+    const dir = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    const headLen = 10.5;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(mx + headLen * 0.45 * Math.cos(dir), my + headLen * 0.45 * Math.sin(dir));
+    ctx.lineTo(mx - headLen * 0.65 * Math.cos(dir - 0.52), my - headLen * 0.65 * Math.sin(dir - 0.52));
+    ctx.lineTo(mx - headLen * 0.65 * Math.cos(dir + 0.52), my - headLen * 0.65 * Math.sin(dir + 0.52));
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function dot(x, y, r, fill, border) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    if (border) {
+      ctx.strokeStyle = border;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function labelPill(text, x, y, opts = {}) {
+    const size = opts.size || 12.5;
+    const color = opts.color || '#3c574d';
+    const align = opts.align || 'center';
+    const weight = opts.weight || 720;
+    const bg = opts.bg !== undefined ? opts.bg : 'rgba(255,255,255,0.92)';
+    const border = opts.border || null;
+    ctx.save();
+    ctx.font = `${weight} ${size}px "Segoe UI", Arial, sans-serif`;
+    ctx.textBaseline = 'middle';
+    const tw = ctx.measureText(text).width;
+    const padX = opts.padX ?? 8;
+    const padY = opts.padY ?? 4.5;
+    let left = x - tw / 2;
+    if (align === 'left') left = x;
+    else if (align === 'right') left = x - tw;
+    if (bg) {
+      const rx = left - padX, ry = y - size / 2 - padY;
+      const rw = tw + padX * 2, rh = size + padY * 2;
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(rx, ry, rw, rh, 7);
+      } else {
+        const r = 7;
+        ctx.moveTo(rx + r, ry);
+        ctx.arcTo(rx + rw, ry, rx + rw, ry + rh, r);
+        ctx.arcTo(rx + rw, ry + rh, rx, ry + rh, r);
+        ctx.arcTo(rx, ry + rh, rx, ry, r);
+        ctx.arcTo(rx, ry, rx + rw, ry, r);
+        ctx.closePath();
+      }
+      ctx.fill();
+      if (border) {
+        ctx.strokeStyle = border;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+    ctx.fillStyle = color;
+    ctx.textAlign = 'left';
+    ctx.fillText(text, left, y);
+    ctx.restore();
+  }
+
+  function paint() {
+    const { w, h, dpr } = dimensions;
+    if (!w || !h) return;
+    const q = calcPhysics();
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    const cx = w * 0.5;
+    const cy = h * 0.5;
+    const L = Math.min(w * 0.36, h * 0.40);
+    const compact = w < 500;
+
+    // Base paper background
+    ctx.fillStyle = '#fbfcf9';
+    ctx.fillRect(0, 0, w, h);
+
+    // Optical density tints for Medium 1 (top) and Medium 2 (bottom)
+    ctx.fillStyle = mediumTint(q.n1);
+    ctx.fillRect(0, 0, w, cy);
+    ctx.fillStyle = mediumTint(q.n2);
+    ctx.fillRect(0, cy, w, h - cy);
+
+    // Interface line
+    line([[0, cy], [w, cy]], C.border, 2.2);
+
+    // Medium badges in safe left-hand zones (bottom-left is always ray-free)
+    const m1Name = materialName(q.n1);
+    const m2Name = materialName(q.n2);
+    const m1Tag = compact
+      ? `n₁ = ${fmt(q.n1, 2)}${m1Name ? ' · ' + m1Name : ''}`
+      : `MEDIUM 1 · n₁ = ${fmt(q.n1, 2)}${m1Name ? ' (' + m1Name + ')' : ''}`;
+    const m2Tag = compact
+      ? `n₂ = ${fmt(q.n2, 2)}${m2Name ? ' · ' + m2Name : ''}`
+      : `MEDIUM 2 · n₂ = ${fmt(q.n2, 2)}${m2Name ? ' (' + m2Name + ')' : ''}`;
+    const edgePad = compact ? 10 : 16;
+    labelPill(m1Tag, edgePad, 22, {
+      align: 'left', size: compact ? 10.5 : 12.5, color: '#325148',
+      bg: 'rgba(255,255,255,0.9)', border: '#d9e5dc', padX: compact ? 7 : 9, padY: compact ? 4 : 5
+    });
+    labelPill(m2Tag, edgePad, h - 22, {
+      align: 'left', size: compact ? 10.5 : 12.5, color: '#325148',
+      bg: 'rgba(255,255,255,0.9)', border: '#d9e5dc', padX: compact ? 7 : 9, padY: compact ? 4 : 5
+    });
+    labelPill('BIDANG BATAS', edgePad, cy + 19, {
+      align: 'left', size: compact ? 9.5 : 11, color: '#5c786d',
+      bg: 'rgba(255,255,255,0.82)', padX: 6, padY: 3
+    });
+
+    // Normal line
+    if (controls.showNormal.checked) {
+      line([[cx, 16], [cx, h - 16]], C.normal, 1.9, [7, 6], 0.88);
+      labelPill('NORMAL', cx + 10, 22, {
+        align: 'left', size: compact ? 10.5 : 11.5, color: C.normal,
+        bg: 'rgba(255,255,255,0.88)', padX: 6, padY: 3
+      });
+    }
+
+    // Critical angle guide when n1 > n2 and angle overlay is active
+    if (controls.showAngles.checked && q.hasCritical && q.thetaC !== null) {
+      const tcRad = q.thetaC * Math.PI / 180;
+      const cLen = L * 0.92;
+      const cEnd = [cx - Math.sin(tcRad) * cLen, cy - Math.cos(tcRad) * cLen];
+      line([[cx, cy], cEnd], C.critical, 1.5, [4, 5], 0.72);
+      const tcText = `θc = ${fmt(q.thetaC, 1)}°`;
+      const tcFontSize = compact ? 10 : 11.5;
+      ctx.save();
+      ctx.font = `720 ${tcFontSize}px "Segoe UI", Arial, sans-serif`;
+      const tcWidth = ctx.measureText(tcText).width + 14;
+      ctx.restore();
+      const rayBelowGuide = q.theta1 >= q.thetaC;
+      let lx, ly, tcAlign;
+      if (rayBelowGuide && cEnd[0] + 10 + tcWidth < cx - 10) {
+        lx = cEnd[0] + 10;
+        ly = Math.max(48, Math.min(cy - 22, cEnd[1] - 4));
+        tcAlign = 'left';
+      } else if (!rayBelowGuide && cEnd[0] - 10 - tcWidth > 12) {
+        lx = cEnd[0] - 10;
+        ly = Math.max(48, Math.min(cy - 22, cEnd[1] + 6));
+        tcAlign = 'right';
+      } else {
+        const innerDist = L * 0.60;
+        lx = Math.max(14 + tcWidth / 2, Math.min(cx - 14 - tcWidth / 2, cx - Math.sin(tcRad) * innerDist));
+        ly = Math.max(48, Math.min(cy - 24, cy - Math.cos(tcRad) * innerDist));
+        tcAlign = 'center';
+      }
+      labelPill(tcText, lx, ly, {
+        align: tcAlign, size: tcFontSize, color: C.critical,
+        bg: 'rgba(255,255,255,0.94)', border: '#ead5c5', padX: 6, padY: 3
+      });
+    }
+
+    // Ray coordinates
+    const src = [cx - Math.sin(q.rad1) * L, cy - Math.cos(q.rad1) * L];
+    const refl = [cx + Math.sin(q.rad1) * L, cy - Math.cos(q.rad1) * L];
+    const refr = q.tir ? null : [cx + Math.sin(q.rad2) * L, cy + Math.cos(q.rad2) * L];
+
+    geom = { cx, cy, L, src };
+
+    // Angle arcs
+    if (controls.showAngles.checked && q.theta1 > 0.5) {
+      const arcR = Math.min(54, L * 0.42);
+
+      // Incident angle θ1 arc
+      ctx.save();
+      ctx.lineWidth = 2.4;
+      ctx.strokeStyle = C.incident;
+      ctx.beginPath();
+      ctx.arc(cx, cy, arcR, -Math.PI / 2 - q.rad1, -Math.PI / 2);
+      ctx.stroke();
+      ctx.restore();
+
+      const mid1 = Math.max(q.rad1 / 2, 0.17);
+      const rTxt1 = arcR + (compact ? 21 : 24);
+      labelPill('θ₁', cx - rTxt1 * Math.sin(mid1), cy - rTxt1 * Math.cos(mid1), {
+        size: compact ? 13 : 14.5, color: C.incident, weight: 780, padX: 5, padY: 2.5
+      });
+
+      // Refracted angle θ2 arc (when refracted)
+      if (!q.tir && q.theta2 !== null && q.theta2 > 0.5) {
+        ctx.save();
+        ctx.lineWidth = 2.4;
+        ctx.strokeStyle = C.refracted;
+        ctx.beginPath();
+        ctx.arc(cx, cy, arcR, Math.PI / 2 - q.rad2, Math.PI / 2);
+        ctx.stroke();
+        ctx.restore();
+
+        const mid2 = Math.max(q.rad2 / 2, 0.17);
+        const rTxt2 = arcR + (compact ? 21 : 24);
+        labelPill('θ₂', cx + rTxt2 * Math.sin(mid2), cy + rTxt2 * Math.cos(mid2), {
+          size: compact ? 13 : 14.5, color: C.refracted, weight: 780, padX: 5, padY: 2.5
+        });
+      }
+
+      // Reflected angle θr arc during TIR
+      if (q.tir) {
+        ctx.save();
+        ctx.lineWidth = 2.4;
+        ctx.strokeStyle = C.reflected;
+        ctx.beginPath();
+        ctx.arc(cx, cy, arcR, -Math.PI / 2, -Math.PI / 2 + q.rad1);
+        ctx.stroke();
+        ctx.restore();
+
+        const midR = Math.max(q.rad1 / 2, 0.17);
+        const rTxtR = arcR + (compact ? 21 : 24);
+        labelPill('θr', cx + rTxtR * Math.sin(midR), cy - rTxtR * Math.cos(midR), {
+          size: compact ? 13 : 14.5, color: C.reflected, weight: 780, padX: 5, padY: 2.5
+        });
+      }
+    }
+
+    // Reflected ray (full strength during TIR, Fresnel-weighted partial reflection otherwise)
+    if (q.tir) {
+      midArrow([cx, cy], refl, C.reflected, 3.6, 1);
+      arrow([[cx, cy], refl], C.reflected, 3.6, 1);
+      const rx = Math.min(w - 86, Math.max(cx + 62, refl[0]));
+      const ry = Math.max(48, Math.min(cy - 24, refl[1] - 20));
+      labelPill('PEMANTULAN SEMPURNA', rx, ry, {
+        size: compact ? 10.5 : 11.5, color: C.reflected, weight: 780,
+        bg: 'rgba(255,255,255,0.94)', border: '#cedee9', padX: 7, padY: 3.5
+      });
+    } else if (controls.showReflected.checked && q.reflectance > 0.0005 && q.theta1 > 0) {
+      const reflAlpha = Math.min(0.86, 0.24 + 0.68 * Math.sqrt(q.reflectance));
+      const reflWidth = 1.9 + 1.3 * Math.sqrt(q.reflectance);
+      arrow([[cx, cy], refl], C.reflected, reflWidth, reflAlpha);
+      if (q.theta1 >= 14 && (q.reflectance >= 0.07 || q.atCritical)) {
+        const rx = Math.min(w - 64, Math.max(cx + 58, refl[0]));
+        const ry = Math.max(46, Math.min(cy - 22, refl[1] - 18));
+        labelPill('SINAR PANTUL', rx, ry, {
+          size: compact ? 10 : 11, color: C.reflected, weight: 720,
+          bg: 'rgba(255,255,255,0.88)', padX: 6, padY: 3
+        });
+      }
+    }
+
+    // Refracted ray
+    if (!q.tir && refr) {
+      midArrow([cx, cy], refr, C.refracted, 3.6, 1);
+      arrow([[cx, cy], refr], C.refracted, 3.6, 1);
+      let bx, by, bAlign = 'center';
+      if (q.theta2 <= 16) {
+        bx = refr[0] + 16;
+        by = Math.min(h - 24, refr[1] - 12);
+        bAlign = 'left';
+      } else if (q.atCritical || q.theta2 >= 76) {
+        bx = Math.min(w - 16, refr[0]);
+        by = Math.min(h - 24, refr[1] + 22);
+        bAlign = 'right';
+      } else {
+        bx = Math.min(w - 64, Math.max(cx + 56, refr[0]));
+        by = Math.min(h - 22, refr[1] + 22);
+      }
+      labelPill(q.atCritical ? 'SINAR BIAS (90°)' : 'SINAR BIAS', bx, by, {
+        align: bAlign, size: compact ? 10.5 : 11.5, color: C.refracted, weight: 780,
+        bg: 'rgba(255,255,255,0.92)', padX: 7, padY: 3.5
+      });
+    } else if (q.tir) {
+      // Gentle cue in Medium 2 explaining no refracted ray enters
+      labelPill('Tidak ada sinar bias (θ₁ > θc)', cx + (w - cx) * 0.5, cy + (h - cy) * 0.48, {
+        size: compact ? 11 : 12.5, color: '#6b7e76', weight: 650,
+        bg: 'rgba(255,255,255,0.82)', border: '#dce5df', padX: 10, padY: 5
+      });
+    }
+
+    // Incident ray + draggable source handle
+    midArrow(src, [cx, cy], C.incident, 3.6, 1);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(183, 124, 63, 0.52)';
+    ctx.lineWidth = 1.6;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath();
+    ctx.arc(src[0], src[1], 13, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+    dot(src[0], src[1], 5.5, C.incident, '#fff');
+
+    // Incident ray label (avoids top-left Medium 1 badge, Normal line, and θc label)
+    let ix, iy, iAlign = 'center';
+    const nearCriticalRight = controls.showAngles.checked && q.hasCritical && q.thetaC !== null &&
+      q.theta1 >= q.thetaC - 4 && q.theta1 <= q.thetaC + 20;
+    if (q.theta1 <= 16) {
+      ix = src[0] - 18;
+      iy = Math.max(54, src[1] + 10);
+      iAlign = 'right';
+    } else if (nearCriticalRight && src[0] > (compact ? 105 : 125)) {
+      ix = src[0] - 18;
+      iy = Math.max(54, src[1] - 12);
+      iAlign = 'right';
+    } else if (q.theta1 >= 72) {
+      ix = Math.max(14, src[0]);
+      iy = Math.max(54, src[1] - 24);
+      iAlign = 'left';
+    } else {
+      ix = Math.max(72, Math.min(cx - 56, src[0] - 6));
+      iy = Math.max(54, src[1] - 24);
+    }
+    labelPill('SINAR DATANG', ix, iy, {
+      align: iAlign, size: compact ? 10.5 : 11.5, color: C.incident, weight: 780,
+      bg: 'rgba(255,255,255,0.92)', padX: 7, padY: 3.5
+    });
+
+    // Normal incidence callout
+    if (q.theta1 === 0) {
+      labelPill('θ₁ = θ₂ = 0° (datang tegak lurus)', cx + 18, cy - L * 0.45, {
+        align: 'left', size: compact ? 11 : 12.5, color: '#396f60', weight: 720,
+        bg: 'rgba(255,255,255,0.92)', border: '#d8e7dc', padX: 8, padY: 4
+      });
+    }
+
+    // Hit point at interface
+    dot(cx, cy, 5, '#ffffff', C.border);
+  }
+
+  function update() {
+    const q = calcPhysics();
+    controls.angle.value = String(Math.round(state.theta1));
+    controls.n1.value = state.n1.toFixed(2);
+    controls.n2.value = state.n2.toFixed(2);
+
+    $('angleVal').textContent = `${Math.round(state.theta1)}°`;
+    $('n1Val').textContent = formatMedium(state.n1);
+    $('n2Val').textContent = formatMedium(state.n2);
+
+    // 4 Stat cards
+    $('statIncident').textContent = `${Math.round(q.theta1)}°`;
+    $('footIncident').textContent = q.theta1 === 0 ? 'Datang tegak lurus bidang batas' : 'Diukur dari garis normal';
+
+    if (q.tir) {
+      $('statRefracted').textContent = '—';
+      $('footRefracted').textContent = 'Tidak ada sinar menembus medium 2';
+    } else if (q.atCritical) {
+      $('statRefracted').textContent = '90,0°';
+      $('footRefracted').textContent = 'Sinar bias merambat sepanjang batas';
+    } else {
+      $('statRefracted').textContent = `${fmt(q.theta2, 1)}°`;
+      if (q.theta1 === 0) $('footRefracted').textContent = 'Diteruskan lurus (0°)';
+      else if (q.sameMedium) $('footRefracted').textContent = 'Sama besar dengan θ₁';
+      else if (q.n1 < q.n2) $('footRefracted').textContent = 'Lebih kecil dari θ₁';
+      else $('footRefracted').textContent = 'Lebih besar dari θ₁';
+    }
+
+    if (q.hasCritical && q.thetaC !== null) {
+      $('statCritical').textContent = `${fmt(q.thetaC, 1)}°`;
+      $('footCritical').textContent = q.tir ? 'Terlampaui · terjadi pantul sempurna' : 'Batas mulai pemantulan sempurna';
+    } else {
+      $('statCritical').textContent = '—';
+      $('footCritical').textContent = 'Hanya ada jika n₁ > n₂';
+    }
+
+    const chipA = $('chipA'), chipB = $('chipB'), chipC = $('chipC');
+    [chipA, chipB, chipC].forEach(el => el.classList.remove('warn'));
+
+    const m1Label = materialName(q.n1) ? materialName(q.n1).toLowerCase() : `medium 1 (n₁ = ${fmt(q.n1, 2)})`;
+    const m2Label = materialName(q.n2) ? materialName(q.n2).toLowerCase() : `medium 2 (n₂ = ${fmt(q.n2, 2)})`;
+
+    if (q.sameMedium) {
+      $('statBehavior').textContent = 'Diteruskan lurus';
+      $('footBehavior').textContent = 'n₁ = n₂ · tidak ada pembelokan';
+      chipA.textContent = 'n₁ = n₂';
+      chipB.textContent = 'Medium sejenis';
+      chipC.textContent = 'Tidak berbelok';
+      $('insightText').textContent = `Kedua medium memiliki indeks bias sama (${fmt(q.n1, 2)}). Cahaya melaju tanpa perubahan kecepatan dan tidak dibelokkan (θ₂ = θ₁ = ${Math.round(q.theta1)}°).`;
+    } else if (q.theta1 === 0) {
+      $('statBehavior').textContent = 'Diteruskan lurus';
+      $('footBehavior').textContent = q.n1 < q.n2 ? 'Tegak lurus · cahaya melambat' : 'Tegak lurus · cahaya lebih cepat';
+      chipA.textContent = q.n1 < q.n2 ? 'n₁ < n₂' : 'n₁ > n₂';
+      chipB.textContent = 'Datang tegak lurus';
+      chipC.textContent = 'θ₁ = θ₂ = 0°';
+      $('insightText').textContent = 'Pada sudut datang 0°, cahaya datang tegak lurus bidang batas sehingga diteruskan lurus tanpa berbelok meskipun kecepatannya berubah di medium 2.';
+    } else if (q.tir) {
+      $('statBehavior').textContent = 'Pantul sempurna';
+      $('footBehavior').textContent = `θ₁ > θc · dipantulkan pada ${Math.round(q.theta1)}°`;
+      chipA.textContent = 'n₁ > n₂';
+      chipB.textContent = `θ₁ > θc (${fmt(q.thetaC, 1)}°)`;
+      chipC.textContent = 'Pemantulan sempurna';
+      chipC.classList.add('warn');
+      $('insightText').textContent = `Sudut datang ${Math.round(q.theta1)}° melebihi sudut kritis ${fmt(q.thetaC, 1)}°. Tidak ada sinar bias—seluruh cahaya dipantulkan kembali ke ${m1Label} dengan sudut pantul ${Math.round(q.theta1)}°.`;
+    } else if (q.atCritical) {
+      $('statBehavior').textContent = 'Tepat sudut kritis';
+      $('footBehavior').textContent = 'θ₂ = 90° · sejajar bidang batas';
+      chipA.textContent = 'n₁ > n₂';
+      chipB.textContent = 'θ₁ = θc';
+      chipC.textContent = 'Sinar bias 90°';
+      chipC.classList.add('warn');
+      $('insightText').textContent = `Sudut datang tepat sama dengan sudut kritis (${fmt(q.thetaC, 1)}°). Sinar bias merambat tepat sejajar bidang batas (θ₂ = 90°).`;
+    } else if (q.n1 < q.n2) {
+      $('statBehavior').textContent = 'Mendekati normal';
+      $('footBehavior').textContent = 'n₁ < n₂ · cahaya melambat';
+      chipA.textContent = 'n₁ < n₂';
+      chipB.textContent = 'Mendekati normal';
+      chipC.textContent = 'Dibiaskan';
+      $('insightText').textContent = `Cahaya berpindah dari ${m1Label} ke ${m2Label} (lebih rapat). Sudut mengecil dari θ₁ = ${Math.round(q.theta1)}° menjadi θ₂ = ${fmt(q.theta2, 1)}° sehingga sinar mendekati garis normal.`;
+    } else {
+      $('statBehavior').textContent = 'Menjauhi normal';
+      $('footBehavior').textContent = 'n₁ > n₂ · cahaya lebih cepat';
+      chipA.textContent = 'n₁ > n₂';
+      chipB.textContent = 'Menjauhi normal';
+      chipC.textContent = 'Dibiaskan';
+      $('insightText').textContent = `Cahaya berpindah dari ${m1Label} ke ${m2Label} (kurang rapat). Sudut membesar dari θ₁ = ${Math.round(q.theta1)}° menjadi θ₂ = ${fmt(q.theta2, 1)}°. Coba perbesar θ₁ melewati ${fmt(q.thetaC, 1)}° untuk melihat pemantulan sempurna.`;
+    }
+
+    // Live Snell formula substitution
+    if (q.tir) {
+      $('formulaStep').textContent =
+        `Untuk n₁ = ${fmt(q.n1, 2)}, n₂ = ${fmt(q.n2, 2)}, dan θ₁ = ${Math.round(q.theta1)}°: (n₁/n₂) sin θ₁ = ${fmt(q.sin2Raw, 3)} > 1, sehingga tidak ada θ₂ real dan terjadi pemantulan sempurna (θr = ${Math.round(q.theta1)}°). `;
+    } else {
+      $('formulaStep').textContent =
+        `Untuk n₁ = ${fmt(q.n1, 2)}, n₂ = ${fmt(q.n2, 2)}, dan θ₁ = ${Math.round(q.theta1)}°: sin θ₂ = ${fmt(q.sin2Raw, 3)}, sehingga θ₂ = ${fmt(q.theta2, 1)}°. `;
+    }
+
+    // Highlight matching preset pill
+    document.querySelectorAll('.pill[data-preset]').forEach(btn => {
+      const p = PRESETS[btn.dataset.preset];
+      const active = p &&
+        Math.abs(state.n1 - p.n1) < 0.005 &&
+        Math.abs(state.n2 - p.n2) < 0.005 &&
+        Math.abs(state.theta1 - p.theta1) <= 1;
+      btn.classList.toggle('active', active);
+    });
+
+    paint();
+  }
+
+  function resize() {
+    const rect = cvs.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (!rect.width || !rect.height) return;
+    const w = Math.round(rect.width * dpr);
+    const h = Math.round(rect.height * dpr);
+    if (cvs.width !== w || cvs.height !== h) {
+      cvs.width = w;
+      cvs.height = h;
+    }
+    dimensions = { w: rect.width, h: rect.height, dpr };
+    paint();
+  }
+
+  function pause() {
+    playing = false;
+    $('animateBtn').textContent = '▶ Otomatis';
+    $('animateBtn').setAttribute('aria-pressed', 'false');
+  }
+
+  function animate(ts) {
+    if (!playing) return;
+    if (!lastTs) lastTs = ts;
+    const dt = Math.min(0.06, (ts - lastTs) / 1000);
+    lastTs = ts;
+    phase += dt * 0.72;
+    state.theta1 = Math.round(40 + 40 * Math.sin(phase));
+    update();
+    requestAnimationFrame(animate);
+  }
+
+  $('animateBtn').addEventListener('click', () => {
+    playing = !playing;
+    $('animateBtn').textContent = playing ? 'Ⅱ Jeda' : '▶ Otomatis';
+    $('animateBtn').setAttribute('aria-pressed', String(playing));
+    if (playing) {
+      phase = Math.asin(Math.max(-1, Math.min(1, (state.theta1 - 40) / 40)));
+      lastTs = 0;
+      requestAnimationFrame(animate);
+    }
+  });
+
+  $('resetBtn').addEventListener('click', () => {
+    pause();
+    state = { ...base };
+    controls.showNormal.checked = true;
+    controls.showAngles.checked = true;
+    controls.showReflected.checked = true;
+    update();
+  });
+
+  $('swapBtn').addEventListener('click', () => {
+    pause();
+    const prevN1 = state.n1;
+    state.n1 = state.n2;
+    state.n2 = prevN1;
+    update();
+  });
+
+  controls.angle.addEventListener('input', e => {
+    pause();
+    state.theta1 = Number(e.target.value);
+    update();
+  });
+
+  controls.n1.addEventListener('input', e => {
+    pause();
+    state.n1 = Number(e.target.value);
+    update();
+  });
+
+  controls.n2.addEventListener('input', e => {
+    pause();
+    state.n2 = Number(e.target.value);
+    update();
+  });
+
+  for (const key of ['showNormal', 'showAngles', 'showReflected']) {
+    controls[key].addEventListener('change', paint);
+  }
+
+  document.querySelectorAll('.pill[data-preset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pause();
+      const p = PRESETS[btn.dataset.preset];
+      if (!p) return;
+      state = { theta1: p.theta1, n1: p.n1, n2: p.n2 };
+      update();
+    });
+  });
+
+  // Pointer dragging on incident ray handle
+  function pointerPos(e) {
+    const r = cvs.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  function distToSegment(px, py, x1, y1, x2, y2) {
+    const dx = x2 - x1, dy = y2 - y1;
+    const lenSq = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / lenSq));
+    return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+  }
+
+  function hit(e) {
+    if (!geom) return false;
+    const p = pointerPos(e);
+    const hitHandle = Math.hypot(p.x - geom.src[0], p.y - geom.src[1]) < Math.max(30, dimensions.w * 0.045);
+    const hitRay = p.y < geom.cy - 10 && distToSegment(p.x, p.y, geom.src[0], geom.src[1], geom.cx, geom.cy) < 18;
+    return hitHandle || hitRay;
+  }
+
+  cvs.addEventListener('pointerdown', e => {
+    if (hit(e)) {
+      pause();
+      dragging = true;
+      cvs.setPointerCapture(e.pointerId);
+      cvs.style.cursor = 'grabbing';
+      e.preventDefault();
+    }
+  });
+
+  cvs.addEventListener('pointermove', e => {
+    if (dragging && geom) {
+      const p = pointerPos(e);
+      const dx = Math.max(0, geom.cx - p.x);
+      const dy = Math.max(6, geom.cy - p.y);
+      state.theta1 = Math.max(0, Math.min(85, Math.round(Math.atan2(dx, dy) * 180 / Math.PI)));
+      update();
+      e.preventDefault();
+    } else {
+      cvs.style.cursor = hit(e) ? 'grab' : 'default';
+    }
+  });
+
+  function endDrag() {
+    dragging = false;
+    cvs.style.cursor = 'default';
+  }
+  cvs.addEventListener('pointerup', endDrag);
+  cvs.addEventListener('pointercancel', endDrag);
+  cvs.addEventListener('lostpointercapture', endDrag);
+
+  cvs.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    pause();
+    const step = e.key === 'ArrowRight' ? 1 : -1;
+    state.theta1 = Math.max(0, Math.min(85, Math.round(state.theta1) + step));
+    update();
+    e.preventDefault();
+  });
+
+  $('saveBtn').addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.download = 'Diagram-Hukum-Pembiasan-BengkelMaFiA.png';
+    a.href = cvs.toDataURL('image/png');
+    document.body.append(a);
+    a.click();
+    a.remove();
+  });
+
+  new ResizeObserver(resize).observe(cvs);
+  window.addEventListener('resize', resize, { passive: true });
+  resize();
+  update();
+})();
+  </script>
+</body>
+</html>

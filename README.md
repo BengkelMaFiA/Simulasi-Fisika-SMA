@@ -25,13 +25,20 @@ Laboratorium virtual berbasis HTML, CSS, dan JavaScript yang dapat dibuka melalu
 - Bayangan senantiasa **maya, tegak, diperkecil** untuk benda nyata di depan cermin.
 - Konvensi: `f < 0`, `s′ < 0`, dan `0 < M < 1`.
 
+### 4. Hukum Pembiasan
+- File utama: [hukum-pembiasan/index.html](hukum-pembiasan/index.html)
+- Ubah **sudut datang** `θ₁` dan **indeks bias** kedua medium (`n₁`, `n₂`) atau tukar kedua medium secara langsung.
+- Amati pembelokan sinar mendekati atau menjauhi garis normal, **sudut kritis** `θc`, serta **pemantulan sempurna** saat `n₁ > n₂` dan `θ₁ > θc`.
+- Dilengkapi seret langsung sinar datang pada diagram, animasi otomatis, reset, dan ekspor diagram PNG.
+- Konvensi: `n₁ sin θ₁ = n₂ sin θ₂`, `sin θc = n₂ / n₁` (untuk `n₁ > n₂`), kedua sudut diukur terhadap **garis normal**.
+
 Semua halaman simulasi memiliki tautan kembali ke [halaman utama](index.html), tautan ke [kanal YouTube BengkelMaFiA](https://www.youtube.com/channel/UCQFua4WLQyzhN3pi0H-nfvA), serta [Instagram @animatematika](https://www.instagram.com/animatematika?vrfl=MTc5ZnBheG8wOHJqcw==).
 
 ## Membuka simulasi
 
-Buka salah satu file `cermin-datar/index.html`, `cermin-cekung/index.html`, atau `cermin-cembung/index.html` di Chrome, Edge, atau browser modern lainnya. Tidak memerlukan backend, akun, atau pustaka eksternal.
+Buka salah satu file `cermin-datar/index.html`, `cermin-cekung/index.html`, `cermin-cembung/index.html`, atau `hukum-pembiasan/index.html` di Chrome, Edge, atau browser modern lainnya. Tidak memerlukan backend, akun, atau pustaka eksternal.
 
-Jika GitHub Pages diaktifkan dengan sumber **main / (root)**, halaman depan berada di URL project Pages dan simulasi berada di subdirektori `/cermin-datar/`, `/cermin-cekung/`, dan `/cermin-cembung/`.
+Jika GitHub Pages diaktifkan dengan sumber **main / (root)**, halaman depan berada di URL project Pages dan simulasi berada di subdirektori `/cermin-datar/`, `/cermin-cekung/`, `/cermin-cembung/`, dan `/hukum-pembiasan/`.
 
 > **Catatan publikasi:** Repository ini awalnya private. Ketersediaan GitHub Pages untuk repository private bergantung pada paket GitHub. GitHub Free memerlukan repository public untuk GitHub Pages. Jangan ubah visibility tanpa meninjau apa yang akan dibagikan.
 
